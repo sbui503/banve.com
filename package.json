@@ -1,0 +1,23 @@
+{
+  "name": "banve.com",
+  "version": "1.0.0",
+  "description": "banve.com — Nền tảng đặt vé máy bay, khách sạn và vé tham quan",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "travel",
+    "flight-booking",
+    "hotel-booking",
+    "ticket-booking",
+    "vietnam"
+  ],
+  "author": "Si Bui <sbui503>",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}
