@@ -59,11 +59,17 @@
         flightWord:"Chuyến bay", hotelWord:"Khách sạn", ticketWord:"Vé tham quan", allPlaces:"Tất cả điểm tham quan",
         dealOff:"Giảm {n}%", flashSale:"Flash sale", reviews:"lượt đánh giá", fromPrice:"từ", sameCity:"Điểm đi và điểm đến không được trùng nhau.",
         navTripFlights:"Vé Trip.com ↗", bookTripFlights:"Đặt vé qua Trip.com (Mọi chuyến bay)", tripFlightHint:"Đặt mọi chặng bay nội địa & quốc tế với giá đại lý đối tác:",
-        tripModalTitle:"Cổng đặt vé máy bay trực tuyến — Trip.com", openInNewTab:"Mở trong tab mới ↗",
-        tripIframeLoading:"Đang kết nối cổng đặt vé Trip.com...", tripIframeFallback:"Nếu giao diện không tải do thiết lập bảo mật của trình duyệt, vui lòng",
-        tripIframeClickHere:"Bấm vào đây để mở trực tiếp trên Trip.com ↗", tripSearchBanner:"Không tìm thấy chuyến bay mong muốn? Đặt mọi tuyến bay trên Trip.com",
-        tripSearchBannerSub:"Đối tác chính thức của banve.com — xuất vé tức thì, kết nối hơn 5.000 hãng bay toàn cầu.", openTripPortal:"Mở cổng Trip.com ↗",
-        bookViaTrip:"Đặt qua Trip.com ↗", previewTripPortal:"Xem trước Cổng vé (Iframe)"
+        tripHotelHint:"Đặt phòng tại hơn 1.400.000 khách sạn toàn cầu với giá đối tác:", bookTripHotels:"Đặt khách sạn qua Trip.com (Toàn cầu)",
+        tripTicketHint:"Đặt vé tham quan, tour & trải nghiệm vui chơi toàn cầu:", bookTripTickets:"Đặt vé tham quan qua Trip.com",
+        tripModalTitle:"Cổng dịch vụ trực tuyến — Trip.com", tripModalTitleFlights:"Cổng đặt vé máy bay trực tuyến — Trip.com",
+        tripModalTitleHotels:"Cổng đặt phòng khách sạn trực tuyến — Trip.com", tripModalTitleTickets:"Cổng vé tham quan & tour trải nghiệm — Trip.com",
+        openInNewTab:"Mở trong tab mới ↗", tripIframeLoading:"Đang kết nối cổng dịch vụ Trip.com...",
+        tripIframeFallback:"Nếu giao diện không tải do thiết lập bảo mật của trình duyệt, vui lòng", tripIframeClickHere:"Bấm vào đây để mở trực tiếp trên Trip.com ↗",
+        tripSearchBanner:"Không tìm thấy chuyến bay mong muốn? Đặt mọi tuyến bay trên Trip.com", tripSearchBannerSub:"Đối tác chính thức của banve.com — xuất vé tức thì, kết nối hơn 5.000 hãng bay toàn cầu.", openTripPortal:"Mở cổng Trip.com ↗",
+        tripSearchBannerHotels:"Tìm thêm lựa chọn khách sạn toàn cầu trên Trip.com", tripSearchBannerHotelsSub:"Hơn 1.400.000 khách sạn & resort với giá đại lý đối tác, xác nhận phòng tức thì.", openTripHotelPortal:"Mở cổng khách sạn Trip.com ↗",
+        tripSearchBannerTickets:"Tìm thêm vé tham quan & hoạt động trên Trip.com", tripSearchBannerTicketsSub:"Vé công viên giải trí, bảo tàng, tour ngày và trải nghiệm tại hàng trăm điểm đến toàn cầu.", openTripTicketPortal:"Mở cổng vé tham quan Trip.com ↗",
+        bookViaTrip:"Đặt qua Trip.com ↗", bookHotelTrip:"Đặt qua Trip.com ↗", bookTicketTrip:"Đặt qua Trip.com ↗",
+        previewTripFlight:"Xem trước Vé máy bay", previewTripHotel:"Xem trước Khách sạn", previewTripTicket:"Xem trước Vé tham quan"
       },
       en: {
         tagline:"Easy booking — great prices everywhere", navFlights:"Flights", navHotels:"Hotels", navTickets:"Attraction tickets", navDeals:"Deals", admin:"Admin",
@@ -118,11 +124,17 @@
         flightWord:"Flight", hotelWord:"Hotel", ticketWord:"Attraction ticket", allPlaces:"All attractions",
         dealOff:"{n}% off", flashSale:"Flash sale", reviews:"reviews", fromPrice:"from", sameCity:"Origin and destination cannot be the same.",
         navTripFlights:"Trip.com Flights ↗", bookTripFlights:"Book on Trip.com (Any Global Flight)", tripFlightHint:"Book any domestic & international flight at partner wholesale rates:",
-        tripModalTitle:"Online Flight Booking Portal — Trip.com", openInNewTab:"Open in new tab ↗",
-        tripIframeLoading:"Connecting to Trip.com Flight Booking Portal...", tripIframeFallback:"If the page does not load due to browser security settings, please",
-        tripIframeClickHere:"Click here to open directly on Trip.com ↗", tripSearchBanner:"Looking for more flight options? Book any flight worldwide on Trip.com",
-        tripSearchBannerSub:"Official partner of banve.com — instant ticketing, 5,000+ global airlines.", openTripPortal:"Open Trip.com Portal ↗",
-        bookViaTrip:"Book on Trip.com ↗", previewTripPortal:"Preview Portal (Iframe)"
+        tripHotelHint:"Book from 1,400,000+ hotels worldwide at partner rates:", bookTripHotels:"Book Hotels on Trip.com (Worldwide)",
+        tripTicketHint:"Book attraction tickets, tours & activities worldwide:", bookTripTickets:"Book Tickets on Trip.com",
+        tripModalTitle:"Online Service Portal — Trip.com", tripModalTitleFlights:"Online Flight Booking Portal — Trip.com",
+        tripModalTitleHotels:"Online Hotel Booking Portal — Trip.com", tripModalTitleTickets:"Attraction & Tour Booking Portal — Trip.com",
+        openInNewTab:"Open in new tab ↗", tripIframeLoading:"Connecting to Trip.com Portal...",
+        tripIframeFallback:"If the page does not load due to browser security settings, please", tripIframeClickHere:"Click here to open directly on Trip.com ↗",
+        tripSearchBanner:"Looking for more flight options? Book any flight worldwide on Trip.com", tripSearchBannerSub:"Official partner of banve.com — instant ticketing, 5,000+ global airlines.", openTripPortal:"Open Trip.com Portal ↗",
+        tripSearchBannerHotels:"Looking for more hotel options? Search 1,400,000+ stays on Trip.com", tripSearchBannerHotelsSub:"Hotels, resorts and apartments worldwide — best partner price guarantee, instant confirmation.", openTripHotelPortal:"Open Trip.com Hotels ↗",
+        tripSearchBannerTickets:"Explore more attraction tickets & tours on Trip.com", tripSearchBannerTicketsSub:"Theme parks, museum tickets, day tours and experiences across top global destinations.", openTripTicketPortal:"Open Trip.com Tickets ↗",
+        bookViaTrip:"Book on Trip.com ↗", bookHotelTrip:"Book on Trip.com ↗", bookTicketTrip:"Book on Trip.com ↗",
+        previewTripFlight:"Preview Flights", previewTripHotel:"Preview Hotels", previewTripTicket:"Preview Tickets"
       }
     };
     var lang = "vi";
@@ -214,26 +226,41 @@
       return url + (url.indexOf("?") < 0 ? "?" : "&") + p.join("&");
     }
 
-    function openTripFlightsModal(customUrl){
-      var url = customUrl || tripLink("https://vn.trip.com/flights/", {
+    function openTripPortal(type, customUrl){
+      var baseUrls = {
+        flights: "https://vn.trip.com/flights/",
+        hotels: "https://vn.trip.com/hotels/",
+        tickets: "https://vn.trip.com/things-to-do/"
+      };
+      var titles = {
+        flights: t("tripModalTitleFlights"),
+        hotels: t("tripModalTitleHotels"),
+        tickets: t("tripModalTitleTickets")
+      };
+      var targetUrl = customUrl || tripLink(baseUrls[type] || baseUrls.flights, {
         locale: lang === "vi" ? "vi-VN" : "en-US",
         curr: currency
       });
       var modal = $("#tripModal");
       var iframe = $("#tripFlightIframe");
       var loading = $("#tripIframeLoading");
+      var titleEl = $("#tripModalTitle");
+      if (titleEl) titleEl.textContent = titles[type] || titles.flights;
       if (iframe){
         if (loading) loading.style.display = "flex";
-        iframe.src = url;
+        iframe.src = targetUrl;
         iframe.onload = function(){
           if (loading) loading.style.display = "none";
         };
       }
-      if ($("#tripDirectLink")) $("#tripDirectLink").href = url;
-      if ($("#tripFallbackLink")) $("#tripFallbackLink").href = url;
+      if ($("#tripDirectLink")) $("#tripDirectLink").href = targetUrl;
+      if ($("#tripFallbackLink")) $("#tripFallbackLink").href = targetUrl;
       if (modal) modal.classList.remove("hidden");
       document.body.style.overflow = "hidden";
     }
+    function openTripFlightsModal(customUrl){ openTripPortal("flights", customUrl); }
+    function openTripHotelsModal(customUrl){ openTripPortal("hotels", customUrl); }
+    function openTripTicketsModal(customUrl){ openTripPortal("tickets", customUrl); }
     function closeTripFlightsModal(){
       var modal = $("#tripModal");
       if (modal) modal.classList.add("hidden");
@@ -401,15 +428,18 @@
         '<div class="body"><div class="meta"><span class="stars">'+stars(h.stars)+'</span><span>'+esc(lang==="vi"?h.cityVi:h.cityEn)+'</span></div>' +
         '<h3>'+esc(h.name)+'</h3><div class="meta"><span class="rate">'+h.rating+'</span><span>'+h.reviews.toLocaleString("vi-VN")+' '+esc(t("reviews"))+'</span></div>' +
         '<div class="foot"><div class="price"><small>'+esc(t("perNight"))+'</small><span class="old">'+fmtMoney(h.old)+'</span><b>'+fmtMoney(h.price)+'</b></div>' +
-        '<button type="button" data-book-hotel="'+h.id+'">'+esc(t("bookNow"))+'</button></div></div></article>';
+        '<div class="prod-actions">' +
+        '<button type="button" data-book-hotel="'+h.id+'">'+esc(t("bookNow"))+'</button>' +
+        '<button type="button" class="btn-sub-trip" data-trip-hotel="'+h.id+'">'+esc(t("bookHotelTrip"))+'</button>' +
+        '</div></div></div></article>';
     }
     function renderHotels(){ $("#hotelGrid").innerHTML = hotels.filter(function(h){return h.on;}).slice(0,3).map(hotelCard).join(""); bindBookButtons(); }
 
     function ticketCard(x){
       var name = lang==="vi" ? x.nameVi : x.nameEn;
       var action = x.tripUrl
-        ? '<a class="book-trip" href="'+esc(tripLink(x.tripUrl))+'" target="_blank" rel="noopener sponsored">'+esc(t("bookTrip"))+'</a>'
-        : '<button type="button" data-book-ticket="'+x.id+'">'+esc(t("bookNow"))+'</button>';
+        ? '<a class="book-trip" href="'+esc(tripLink(x.tripUrl))+'" target="_blank" rel="noopener sponsored" data-trip-ticket-url="'+esc(tripLink(x.tripUrl))+'">'+esc(t("bookTrip"))+'</a>'
+        : '<div class="prod-actions"><button type="button" data-book-ticket="'+x.id+'">'+esc(t("bookNow"))+'</button><button type="button" class="btn-sub-trip" data-trip-ticket="'+x.id+'">'+esc(t("bookTicketTrip"))+'</button></div>';
       return '<article class="prod"><div class="ph"><img src="'+x.img+'" alt="'+esc(name)+'" /><span class="badge">-'+discountPct(x.old,x.price)+'%</span></div>' +
         '<div class="body"><div class="meta"><span>'+esc(lang==="vi"?x.cityVi:x.cityEn)+'</span></div><h3>'+esc(name)+'</h3>' +
         '<div class="meta"><span class="rate">'+x.rating+'</span><span>'+x.reviews.toLocaleString("vi-VN")+' '+esc(t("reviews"))+'</span></div>' +
@@ -465,7 +495,8 @@
         if (!found.length) found = hotels.filter(function(h){ return h.on; });
         lastResults = found;
         $("#sortSel").disabled = true;
-        listEl.innerHTML = found.map(hotelCard).join("");
+        var hotelBannerHtml = '<div class="trip-search-banner"><div class="t-text"><strong data-i18n="tripSearchBannerHotels">'+esc(t("tripSearchBannerHotels"))+'</strong><p data-i18n="tripSearchBannerHotelsSub">'+esc(t("tripSearchBannerHotelsSub"))+'</p></div><button type="button" class="btn-trip-banner" id="bannerTripHotelBtn" data-i18n="openTripHotelPortal">'+esc(t("openTripHotelPortal"))+'</button></div>';
+        listEl.innerHTML = hotelBannerHtml + found.map(hotelCard).join("");
         showResults(t("resultsHotels",{city:cityName(cityByCode(city))}), fmtDate(ci) + " · " + t("nights",{n:nights}) + " · " + t("roomsGuests",{r:rooms,g:guests}) + " · " + t("foundN",{n:found.length}));
       } else if (kind==="tickets"){
         var sel = $("#tPlace").value, date2 = $("#tDate").value, qty = parseInt($("#tQty").value,10);
@@ -473,7 +504,8 @@
         var found2 = tickets.filter(function(x){ return x.on && (sel==="all" || x.id===parseInt(sel,10)); });
         lastResults = found2;
         $("#sortSel").disabled = true;
-        listEl.innerHTML = found2.map(ticketCard).join("");
+        var ticketBannerHtml = '<div class="trip-search-banner"><div class="t-text"><strong data-i18n="tripSearchBannerTickets">'+esc(t("tripSearchBannerTickets"))+'</strong><p data-i18n="tripSearchBannerTicketsSub">'+esc(t("tripSearchBannerTicketsSub"))+'</p></div><button type="button" class="btn-trip-banner" id="bannerTripTicketBtn" data-i18n="openTripTicketPortal">'+esc(t("openTripTicketPortal"))+'</button></div>';
+        listEl.innerHTML = ticketBannerHtml + found2.map(ticketCard).join("");
         showResults(t("resultsTickets"), fmtDate(date2) + " · " + t("ticketsQty",{n:qty}) + " · " + t("foundN",{n:found2.length}));
       }
       bindBookButtons();
@@ -521,12 +553,38 @@
     function bindBookButtons(){
       $$("[data-trip-flight]").forEach(function(b){
         if (b.dataset.bound) return; b.dataset.bound = "1";
-        b.addEventListener("click", function(){ openTripFlightsModal(); });
+        b.addEventListener("click", function(){ openTripPortal("flights"); });
       });
-      var bannerBtn = $("#bannerTripFlightBtn");
-      if (bannerBtn && !bannerBtn.dataset.bound){
-        bannerBtn.dataset.bound = "1";
-        bannerBtn.addEventListener("click", function(){ openTripFlightsModal(); });
+      $$("[data-trip-hotel]").forEach(function(b){
+        if (b.dataset.bound) return; b.dataset.bound = "1";
+        b.addEventListener("click", function(){ openTripPortal("hotels"); });
+      });
+      $$("[data-trip-ticket]").forEach(function(b){
+        if (b.dataset.bound) return; b.dataset.bound = "1";
+        b.addEventListener("click", function(){ openTripPortal("tickets"); });
+      });
+      $$("[data-trip-ticket-url]").forEach(function(b){
+        if (b.dataset.bound) return; b.dataset.bound = "1";
+        b.addEventListener("click", function(e){
+          e.preventDefault();
+          var u = b.getAttribute("data-trip-ticket-url");
+          openTripPortal("tickets", u);
+        });
+      });
+      var bannerFlight = $("#bannerTripFlightBtn");
+      if (bannerFlight && !bannerFlight.dataset.bound){
+        bannerFlight.dataset.bound = "1";
+        bannerFlight.addEventListener("click", function(){ openTripPortal("flights"); });
+      }
+      var bannerHotel = $("#bannerTripHotelBtn");
+      if (bannerHotel && !bannerHotel.dataset.bound){
+        bannerHotel.dataset.bound = "1";
+        bannerHotel.addEventListener("click", function(){ openTripPortal("hotels"); });
+      }
+      var bannerTicket = $("#bannerTripTicketBtn");
+      if (bannerTicket && !bannerTicket.dataset.bound){
+        bannerTicket.dataset.bound = "1";
+        bannerTicket.addEventListener("click", function(){ openTripPortal("tickets"); });
       }
       $$("[data-book-flight]").forEach(function(b){
         if (b.dataset.bound) return; b.dataset.bound = "1";
@@ -761,7 +819,19 @@
     var openTripBtn = $("#openTripFlightsBtn");
     if (openTripBtn){
       openTripBtn.addEventListener("click", function(){
-        openTripFlightsModal();
+        openTripPortal("flights");
+      });
+    }
+    var openTripHotelsBtn = $("#openTripHotelsBtn");
+    if (openTripHotelsBtn){
+      openTripHotelsBtn.addEventListener("click", function(){
+        openTripPortal("hotels");
+      });
+    }
+    var openTripTicketsBtn = $("#openTripTicketsBtn");
+    if (openTripTicketsBtn){
+      openTripTicketsBtn.addEventListener("click", function(){
+        openTripPortal("tickets");
       });
     }
     var tripClose = $("#tripModalClose");
@@ -774,10 +844,22 @@
         if (e.target === this) closeTripFlightsModal();
       });
     }
-    var adminPreview = $("#adminPreviewTripFlightBtn");
-    if (adminPreview){
-      adminPreview.addEventListener("click", function(){
-        openTripFlightsModal();
+    var adminPrevFlight = $("#adminPreviewTripFlightBtn");
+    if (adminPrevFlight){
+      adminPrevFlight.addEventListener("click", function(){
+        openTripPortal("flights");
+      });
+    }
+    var adminPrevHotel = $("#adminPreviewTripHotelBtn");
+    if (adminPrevHotel){
+      adminPrevHotel.addEventListener("click", function(){
+        openTripPortal("hotels");
+      });
+    }
+    var adminPrevTicket = $("#adminPreviewTripTicketBtn");
+    if (adminPrevTicket){
+      adminPrevTicket.addEventListener("click", function(){
+        openTripPortal("tickets");
       });
     }
     document.addEventListener("keydown", function(e){
