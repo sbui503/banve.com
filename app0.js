@@ -57,7 +57,13 @@
         stOn:"Đang bán", stOff:"Tạm ngưng", toggle:"Bật/Tắt", confirmB:"Xác nhận", cancelB:"Huỷ đơn",
         toastCancelled:"Đã huỷ đơn {code}", toastConfirmed:"Đã xác nhận đơn {code}", toastPrice:"Đã cập nhật giá", toastToggled:"Đã cập nhật trạng thái hiển thị",
         flightWord:"Chuyến bay", hotelWord:"Khách sạn", ticketWord:"Vé tham quan", allPlaces:"Tất cả điểm tham quan",
-        dealOff:"Giảm {n}%", flashSale:"Flash sale", reviews:"lượt đánh giá", fromPrice:"từ", sameCity:"Điểm đi và điểm đến không được trùng nhau."
+        dealOff:"Giảm {n}%", flashSale:"Flash sale", reviews:"lượt đánh giá", fromPrice:"từ", sameCity:"Điểm đi và điểm đến không được trùng nhau.",
+        navTripFlights:"Vé Trip.com ↗", bookTripFlights:"Đặt vé qua Trip.com (Mọi chuyến bay)", tripFlightHint:"Đặt mọi chặng bay nội địa & quốc tế với giá đại lý đối tác:",
+        tripModalTitle:"Cổng đặt vé máy bay trực tuyến — Trip.com", openInNewTab:"Mở trong tab mới ↗",
+        tripIframeLoading:"Đang kết nối cổng đặt vé Trip.com...", tripIframeFallback:"Nếu giao diện không tải do thiết lập bảo mật của trình duyệt, vui lòng",
+        tripIframeClickHere:"Bấm vào đây để mở trực tiếp trên Trip.com ↗", tripSearchBanner:"Không tìm thấy chuyến bay mong muốn? Đặt mọi tuyến bay trên Trip.com",
+        tripSearchBannerSub:"Đối tác chính thức của banve.com — xuất vé tức thì, kết nối hơn 5.000 hãng bay toàn cầu.", openTripPortal:"Mở cổng Trip.com ↗",
+        bookViaTrip:"Đặt qua Trip.com ↗", previewTripPortal:"Xem trước Cổng vé (Iframe)"
       },
       en: {
         tagline:"Easy booking — great prices everywhere", navFlights:"Flights", navHotels:"Hotels", navTickets:"Attraction tickets", navDeals:"Deals", admin:"Admin",
@@ -110,7 +116,13 @@
         stOn:"On sale", stOff:"Paused", toggle:"Toggle", confirmB:"Confirm", cancelB:"Cancel",
         toastCancelled:"Booking {code} cancelled", toastConfirmed:"Booking {code} confirmed", toastPrice:"Price updated", toastToggled:"Visibility updated",
         flightWord:"Flight", hotelWord:"Hotel", ticketWord:"Attraction ticket", allPlaces:"All attractions",
-        dealOff:"{n}% off", flashSale:"Flash sale", reviews:"reviews", fromPrice:"from", sameCity:"Origin and destination cannot be the same."
+        dealOff:"{n}% off", flashSale:"Flash sale", reviews:"reviews", fromPrice:"from", sameCity:"Origin and destination cannot be the same.",
+        navTripFlights:"Trip.com Flights ↗", bookTripFlights:"Book on Trip.com (Any Global Flight)", tripFlightHint:"Book any domestic & international flight at partner wholesale rates:",
+        tripModalTitle:"Online Flight Booking Portal — Trip.com", openInNewTab:"Open in new tab ↗",
+        tripIframeLoading:"Connecting to Trip.com Flight Booking Portal...", tripIframeFallback:"If the page does not load due to browser security settings, please",
+        tripIframeClickHere:"Click here to open directly on Trip.com ↗", tripSearchBanner:"Looking for more flight options? Book any flight worldwide on Trip.com",
+        tripSearchBannerSub:"Official partner of banve.com — instant ticketing, 5,000+ global airlines.", openTripPortal:"Open Trip.com Portal ↗",
+        bookViaTrip:"Book on Trip.com ↗", previewTripPortal:"Preview Portal (Iframe)"
       }
     };
     var lang = "vi";
@@ -189,12 +201,45 @@
 
     /* Trip.com affiliate settings — filled in later from the admin panel; blank = links carry no tracking params */
     var tripAffiliate = {allianceid:"11053323", sid:"333749550"};
-    function tripLink(url){
+    function tripLink(url, params){
       var p = [];
       if (tripAffiliate.allianceid) p.push("Allianceid=" + encodeURIComponent(tripAffiliate.allianceid));
       if (tripAffiliate.sid) p.push("SID=" + encodeURIComponent(tripAffiliate.sid));
+      if (params){
+        for (var k in params){
+          if (params[k]) p.push(encodeURIComponent(k) + "=" + encodeURIComponent(params[k]));
+        }
+      }
       if (!p.length) return url;
       return url + (url.indexOf("?") < 0 ? "?" : "&") + p.join("&");
+    }
+
+    function openTripFlightsModal(customUrl){
+      var url = customUrl || tripLink("https://vn.trip.com/flights/", {
+        locale: lang === "vi" ? "vi-VN" : "en-US",
+        curr: currency
+      });
+      var modal = $("#tripModal");
+      var iframe = $("#tripFlightIframe");
+      var loading = $("#tripIframeLoading");
+      if (iframe){
+        if (loading) loading.style.display = "flex";
+        iframe.src = url;
+        iframe.onload = function(){
+          if (loading) loading.style.display = "none";
+        };
+      }
+      if ($("#tripDirectLink")) $("#tripDirectLink").href = url;
+      if ($("#tripFallbackLink")) $("#tripFallbackLink").href = url;
+      if (modal) modal.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+    }
+    function closeTripFlightsModal(){
+      var modal = $("#tripModal");
+      if (modal) modal.classList.add("hidden");
+      var iframe = $("#tripFlightIframe");
+      if (iframe) iframe.src = "about:blank";
+      document.body.style.overflow = "";
     }
 
     var deals = [
@@ -389,7 +434,8 @@
         (f.seats>0 && f.seats<=10 ? '<span class="tag hot">'+esc(t("onlySeats",{n:f.seats}))+'</span>' : '<span class="tag">'+f.seats+' '+esc(t("seatsLeft"))+'</span>') +
         '</div><div style="text-align:right"><div class="t">'+fmtTime(f.arr)+'</div><div class="c">'+lastSearch.to+'</div></div></div>' +
         '<div class="buy"><div class="old">'+fmtMoney(f.old*pax)+'</div><div class="now">'+fmtMoney(f.price*pax)+'</div><div class="per">'+pax+' '+esc(t("pax").toLowerCase())+' · '+esc(t("saving",{n:fmtMoney((f.old-f.price)*pax)}))+'</div>' +
-        '<button type="button" data-book-flight="'+f.no+'|'+f.al+'|'+f.dep+'|'+f.arr+'|'+f.price+'">'+esc(t("choose"))+'</button></div></div>';
+        '<button type="button" data-book-flight="'+f.no+'|'+f.al+'|'+f.dep+'|'+f.arr+'|'+f.price+'">'+esc(t("choose"))+'</button>' +
+        '<button type="button" class="btn-sub-trip" data-trip-flight="'+f.al+'|'+f.no+'">'+esc(t("bookViaTrip"))+'</button></div></div>';
     }
     function sortFlights(list, mode){
       var arr = list.slice();
@@ -407,7 +453,8 @@
         lastSearch.from = from; lastSearch.to = to; lastSearch.date = date; lastSearch.pax = pax;
         lastResults = sortFlights(genFlights(from, to, date), $("#sortSel").value);
         $("#sortSel").disabled = false;
-        listEl.innerHTML = lastResults.map(function(f){ return flightCard(f, pax); }).join("");
+        var bannerHtml = '<div class="trip-search-banner"><div class="t-text"><strong data-i18n="tripSearchBanner">'+esc(t("tripSearchBanner"))+'</strong><p data-i18n="tripSearchBannerSub">'+esc(t("tripSearchBannerSub"))+'</p></div><button type="button" class="btn-trip-banner" id="bannerTripFlightBtn" data-i18n="openTripPortal">'+esc(t("openTripPortal"))+'</button></div>';
+        listEl.innerHTML = bannerHtml + lastResults.map(function(f){ return flightCard(f, pax); }).join("");
         showResults(t("resultsFlights",{from:cityName(cityByCode(from)), to:cityName(cityByCode(to))}), fmtDate(date) + " · " + t("foundN",{n:lastResults.length}));
       } else if (kind==="hotels"){
         var city = $("#hCity").value, ci = $("#hIn").value, co = $("#hOut").value;
@@ -472,6 +519,15 @@
     $("#bookingOverlay").addEventListener("click", function(e){ if (e.target===this) closeBooking(); });
 
     function bindBookButtons(){
+      $$("[data-trip-flight]").forEach(function(b){
+        if (b.dataset.bound) return; b.dataset.bound = "1";
+        b.addEventListener("click", function(){ openTripFlightsModal(); });
+      });
+      var bannerBtn = $("#bannerTripFlightBtn");
+      if (bannerBtn && !bannerBtn.dataset.bound){
+        bannerBtn.dataset.bound = "1";
+        bannerBtn.addEventListener("click", function(){ openTripFlightsModal(); });
+      }
       $$("[data-book-flight]").forEach(function(b){
         if (b.dataset.bound) return; b.dataset.bound = "1";
         b.addEventListener("click", function(){
@@ -692,6 +748,43 @@
     }
     $$(".cur-sel").forEach(function(s){
       s.addEventListener("change", function(){ setCurrency(s.value); });
+    });
+
+    /* ============ Trip.com Flight Modal Listeners ============ */
+    var navTrip = $("#navTripFlights");
+    if (navTrip){
+      navTrip.addEventListener("click", function(e){
+        e.preventDefault();
+        openTripFlightsModal();
+      });
+    }
+    var openTripBtn = $("#openTripFlightsBtn");
+    if (openTripBtn){
+      openTripBtn.addEventListener("click", function(){
+        openTripFlightsModal();
+      });
+    }
+    var tripClose = $("#tripModalClose");
+    if (tripClose){
+      tripClose.addEventListener("click", closeTripFlightsModal);
+    }
+    var tripModalEl = $("#tripModal");
+    if (tripModalEl){
+      tripModalEl.addEventListener("click", function(e){
+        if (e.target === this) closeTripFlightsModal();
+      });
+    }
+    var adminPreview = $("#adminPreviewTripFlightBtn");
+    if (adminPreview){
+      adminPreview.addEventListener("click", function(){
+        openTripFlightsModal();
+      });
+    }
+    document.addEventListener("keydown", function(e){
+      if (e.key === "Escape"){
+        closeTripFlightsModal();
+        closeBooking();
+      }
     });
 
     /* ============ Init ============ */

@@ -31,6 +31,7 @@
           <a href="#khach-san" data-i18n="navHotels">Khách sạn</a>
           <a href="#tham-quan" data-i18n="navTickets">Vé tham quan</a>
           <a href="#california" data-i18n="navCa">California</a>
+          <a href="#trip-flights" id="navTripFlights" data-i18n="navTripFlights">Vé Trip.com ↗</a>
           <a href="#uu-dai" data-i18n="navDeals">Ưu đãi</a>
         </nav>
         <div class="bar-right">
@@ -103,6 +104,13 @@
             <div class="search-btn">
               <button class="btn-primary" type="submit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><span data-i18n="searchFlights">Tìm chuyến bay</span></button>
             </div>
+          </div>
+          <div class="trip-flight-row">
+            <span class="trip-flight-hint" data-i18n="tripFlightHint">Đặt mọi chặng bay nội địa &amp; quốc tế với giá đại lý đối tác:</span>
+            <button type="button" class="btn-trip-portal" id="openTripFlightsBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="16" height="16"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+              <span data-i18n="bookTripFlights">Đặt vé qua Trip.com (Mọi chuyến bay)</span>
+            </button>
           </div>
         </form>
 
@@ -372,8 +380,47 @@
           <form id="tripForm" class="mform" style="max-width:480px">
             <div class="field"><label data-i18n="tripAlliance">Alliance ID</label><input id="tripAllianceId" type="text" placeholder="11053323" /></div>
             <div class="field"><label>SID</label><input id="tripSid" type="text" placeholder="333749550" /></div>
-            <button class="btn-primary" type="submit" data-i18n="tripSave">Lưu cài đặt</button>
+            <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
+              <button class="btn-primary" type="submit" data-i18n="tripSave">Lưu cài đặt</button>
+              <button class="btn-ghost" id="adminPreviewTripFlightBtn" type="button" data-i18n="previewTripPortal">Xem trước Cổng vé (Iframe)</button>
+            </div>
           </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trip.com Flight Booking Iframe Modal -->
+  <div class="overlay hidden" id="tripModal">
+    <div class="modal modal-iframe" role="dialog" aria-modal="true" aria-labelledby="tripModalTitle">
+      <div class="mhead iframe-mhead">
+        <div class="iframe-title-wrap">
+          <span class="trip-badge">Trip.com Partner</span>
+          <h3 id="tripModalTitle" data-i18n="tripModalTitle">Đặt vé máy bay trực tuyến — Trip.com</h3>
+        </div>
+        <div class="iframe-actions">
+          <a id="tripDirectLink" class="btn-ghost-sm" href="https://vn.trip.com/flights/" target="_blank" rel="noopener sponsored">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
+            <span data-i18n="openInNewTab">Mở trong tab mới ↗</span>
+          </a>
+          <button class="x" id="tripModalClose" type="button" aria-label="Đóng">✕</button>
+        </div>
+      </div>
+      <div class="iframe-body">
+        <div class="iframe-loading" id="tripIframeLoading">
+          <div class="spinner"></div>
+          <p data-i18n="tripIframeLoading">Đang kết nối cổng đặt vé Trip.com...</p>
+        </div>
+        <iframe
+          id="tripFlightIframe"
+          src="about:blank"
+          title="Trip.com Flight Booking"
+          allow="payment; geolocation; camera; microphone; clipboard-write; fullscreen"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-top-navigation-by-user-activation"
+        ></iframe>
+        <div class="iframe-footer-note">
+          <span data-i18n="tripIframeFallback">Nếu giao diện không tải do thiết lập bảo mật của trình duyệt, vui lòng</span>
+          <a id="tripFallbackLink" href="https://vn.trip.com/flights/" target="_blank" rel="noopener sponsored" data-i18n="tripIframeClickHere">Bấm vào đây để mở trực tiếp trên Trip.com ↗</a>
         </div>
       </div>
     </div>

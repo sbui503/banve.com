@@ -266,4 +266,38 @@
         .dest img{transition:none}
         .toast{transition:none}
       }
+
+      /* ---------- Trip.com Iframe Modal & Controls ---------- */
+      .modal-iframe{max-width:1120px;width:95vw;height:90vh;display:flex;flex-direction:column;border-radius:18px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
+      @media (max-width:768px){.modal-iframe{width:100vw;height:100vh;max-height:100vh;border-radius:0}}
+      .iframe-mhead{padding:12px 18px;border-bottom:1px solid var(--line);background:var(--surface-2);display:flex;align-items:center;justify-content:space-between;gap:12px;flex:none}
+      .iframe-title-wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+      .trip-badge{background:#2577e3;color:#fff;font-size:11px;font-weight:800;padding:4px 9px;border-radius:999px;letter-spacing:.3px;text-transform:uppercase}
+      .iframe-mhead h3{margin:0;font-size:16px;font-weight:800;color:var(--ink)}
+      .iframe-actions{display:flex;align-items:center;gap:8px}
+      .btn-ghost-sm{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;font-size:12px;font-weight:700;color:var(--ink);background:var(--surface);transition:all .15s;text-decoration:none}
+      .btn-ghost-sm:hover{border-color:var(--brand);color:var(--brand)}
+      .iframe-body{flex:1;position:relative;display:flex;flex-direction:column;background:#f2f5fa;overflow:hidden}
+      .iframe-body iframe{flex:1;width:100%;height:100%;border:0;background:#fff}
+      .iframe-loading{position:absolute;inset:0;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:2;transition:opacity .2s}
+      .spinner{width:36px;height:36px;border:3px solid var(--line);border-top-color:var(--brand);border-radius:50%;animation:spin .8s linear infinite}
+      @keyframes spin{to{transform:rotate(360deg)}}
+      .iframe-footer-note{padding:8px 16px;font-size:12px;color:var(--muted);background:var(--surface-2);border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;flex:none}
+      .iframe-footer-note a{color:var(--brand);font-weight:700;text-decoration:underline}
+
+      /* Flight Actions & Search Banner */
+      .trip-flight-row{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+      .trip-flight-hint{font-size:13px;color:var(--muted);font-weight:500}
+      .btn-trip-portal{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;background:linear-gradient(135deg,#2577e3 0%,#0b5bd3 100%);color:#fff;border:0;border-radius:999px;font-weight:700;font-size:13.5px;box-shadow:0 4px 14px -3px rgba(37,119,227,.4);transition:transform .15s,box-shadow .15s;cursor:pointer}
+      .btn-trip-portal:hover{transform:translateY(-1px);box-shadow:0 6px 18px -3px rgba(37,119,227,.55)}
+      .trip-search-banner{margin-bottom:18px;background:linear-gradient(135deg,#eef4fd 0%,#e3edfc 100%);border:1.5px solid #c7dcfa;border-radius:var(--r-md);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+      @media (prefers-color-scheme: dark){.trip-search-banner{background:#13233d;border-color:#22385c}}
+      .trip-search-banner .t-text{font-size:13.5px}
+      .trip-search-banner strong{display:block;color:var(--ink);font-size:14.5px;margin-bottom:2px}
+      .trip-search-banner p{margin:0;color:var(--muted);font-size:12.5px}
+      .btn-trip-banner{padding:8px 16px;background:#2577e3;color:#fff;border:0;border-radius:999px;font-weight:700;font-size:13px;white-space:nowrap;cursor:pointer;transition:background .2s}
+      .btn-trip-banner:hover{background:#1360cc}
+      .btn-sub-trip{border:1px solid var(--brand);background:transparent;color:var(--brand);border-radius:10px;padding:7px 12px;font-weight:700;font-size:12.5px;white-space:nowrap;margin-top:6px;width:100%;cursor:pointer;transition:all .15s}
+      .btn-sub-trip:hover{background:var(--brand);color:#fff}
+
     
