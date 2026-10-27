@@ -69,7 +69,16 @@
         tripSearchBannerHotels:"Tìm thêm lựa chọn khách sạn toàn cầu trên Trip.com", tripSearchBannerHotelsSub:"Hơn 1.400.000 khách sạn & resort với giá đại lý đối tác, xác nhận phòng tức thì.", openTripHotelPortal:"Mở cổng khách sạn Trip.com ↗",
         tripSearchBannerTickets:"Tìm thêm vé tham quan & hoạt động trên Trip.com", tripSearchBannerTicketsSub:"Vé công viên giải trí, bảo tàng, tour ngày và trải nghiệm tại hàng trăm điểm đến toàn cầu.", openTripTicketPortal:"Mở cổng vé tham quan Trip.com ↗",
         bookViaTrip:"Đặt qua Trip.com ↗", bookHotelTrip:"Đặt qua Trip.com ↗", bookTicketTrip:"Đặt qua Trip.com ↗",
-        previewTripFlight:"Xem trước Vé máy bay", previewTripHotel:"Xem trước Khách sạn", previewTripTicket:"Xem trước Vé tham quan"
+        previewTripFlight:"Xem trước Vé máy bay", previewTripHotel:"Xem trước Khách sạn", previewTripTicket:"Xem trước Vé tham quan",
+        cookieNotice:"Tránh lỗi chặn cookie trên Safari/iPhone: Nhấn nút để mở trực tiếp trên Trip.com.",
+        openDirectTrip:"Mở trên Trip.com ↗",
+        popularAirports:"Điểm đến phổ biến",
+        vietnamAirports:"Sân bay Việt Nam",
+        asiaAirports:"Châu Á & Thái Bình Dương",
+        americaAirports:"Châu Mỹ (Mỹ & Canada)",
+        europeAirports:"Châu Âu & Úc & Trung Đông",
+        customSearchPrefix:"Tìm chuyến bay đến",
+        allPlacesOption:"Tất cả điểm tham quan"
       },
       en: {
         tagline:"Easy booking — great prices everywhere", navFlights:"Flights", navHotels:"Hotels", navTickets:"Attraction tickets", navDeals:"Deals", admin:"Admin",
@@ -134,7 +143,16 @@
         tripSearchBannerHotels:"Looking for more hotel options? Search 1,400,000+ stays on Trip.com", tripSearchBannerHotelsSub:"Hotels, resorts and apartments worldwide — best partner price guarantee, instant confirmation.", openTripHotelPortal:"Open Trip.com Hotels ↗",
         tripSearchBannerTickets:"Explore more attraction tickets & tours on Trip.com", tripSearchBannerTicketsSub:"Theme parks, museum tickets, day tours and experiences across top global destinations.", openTripTicketPortal:"Open Trip.com Tickets ↗",
         bookViaTrip:"Book on Trip.com ↗", bookHotelTrip:"Book on Trip.com ↗", bookTicketTrip:"Book on Trip.com ↗",
-        previewTripFlight:"Preview Flights", previewTripHotel:"Preview Hotels", previewTripTicket:"Preview Tickets"
+        previewTripFlight:"Preview Flights", previewTripHotel:"Preview Hotels", previewTripTicket:"Preview Tickets",
+        cookieNotice:"Avoid Safari/iPhone cookie blocks: Tap the button to open directly on Trip.com.",
+        openDirectTrip:"Open on Trip.com ↗",
+        popularAirports:"Popular Destinations",
+        vietnamAirports:"Vietnam Airports",
+        asiaAirports:"Asia & Pacific",
+        americaAirports:"Americas (US & Canada)",
+        europeAirports:"Europe, Australia & Middle East",
+        customSearchPrefix:"Search flights to",
+        allPlacesOption:"All attractions"
       }
     };
     var lang = "vi";
@@ -155,24 +173,118 @@
     }
 
     /* ============ Data ============ */
-    var CITIES = [
-      {code:"SGN", vi:"TP. Hồ Chí Minh", en:"Ho Chi Minh City"},
-      {code:"HAN", vi:"Hà Nội", en:"Hanoi"},
-      {code:"DAD", vi:"Đà Nẵng", en:"Da Nang"},
-      {code:"PQC", vi:"Phú Quốc", en:"Phu Quoc"},
-      {code:"CXR", vi:"Nha Trang", en:"Nha Trang"},
-      {code:"HUI", vi:"Huế", en:"Hue"},
-      {code:"DLI", vi:"Đà Lạt", en:"Da Lat"},
-      {code:"VCA", vi:"Cần Thơ", en:"Can Tho"}
+
+    /* ============ Global Airports & Cities Database ============ */
+    function removeDiacritics(str){
+      return String(str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    }
+
+    var AIRPORTS = [
+      /* Vietnam Domestic */
+      {code:"SGN", vi:"TP. Hồ Chí Minh", en:"Ho Chi Minh City", airportVi:"Sân bay Tân Sơn Nhất", airportEn:"Tan Son Nhat Intl", countryVi:"Việt Nam", countryEn:"Vietnam", cat:"popular"},
+      {code:"HAN", vi:"Hà Nội", en:"Hanoi", airportVi:"Sân bay Nội Bài", airportEn:"Noi Bai Intl", countryVi:"Việt Nam", countryEn:"Vietnam", cat:"popular"},
+      {code:"DAD", vi:"Đà Nẵng", en:"Da Nang", airportVi:"Sân bay Đà Nẵng", airportEn:"Da Nang Intl", countryVi:"Việt Nam", countryEn:"Vietnam", cat:"popular"},
+      {code:"PQC", vi:"Phú Quốc", en:"Phu Quoc", airportVi:"Sân bay Phú Quốc", airportEn:"Phu Quoc Intl", countryVi:"Việt Nam", countryEn:"Vietnam", cat:"popular"},
+      {code:"CXR", vi:"Nha Trang", en:"Nha Trang", airportVi:"Sân bay Cam Ranh", airportEn:"Cam Ranh Intl", countryVi:"Việt Nam", countryEn:"Vietnam", cat:"popular"},
+      {code:"HPH", vi:"Hải Phòng", en:"Hai Phong", airportVi:"Sân bay Cát Bi", airportEn:"Cat Bi Intl", countryVi:"Việt Nam", countryEn:"Vietnam", cat:"vn"},
+      {code:"HUI", vi:"Huế", en:"Hue", airportVi:"Sân bay Phú Bài", airportEn:"Phu Bai Intl", countryVi:"Việt Nam", countryEn:"Vietnam", cat:"vn"},
+      {code:"DLI", vi:"Đà Lạt", en:"Da Lat", airportVi:"Sân bay Liên Khương", airportEn:"Lien Khuong", countryVi:"Việt Nam", countryEn:"Vietnam", cat:"vn"},
+      {code:"VCA", vi:"Cần Thơ", en:"Can Tho", airportVi:"Sân bay Cần Thơ", airportEn:"Can Tho Intl", countryVi:"Việt Nam", countryEn:"Vietnam", cat:"vn"},
+      {code:"VII", vi:"Vinh", en:"Vinh", airportVi:"Sân bay Vinh", airportEn:"Vinh Airport", countryVi:"Việt Nam", countryEn:"Vietnam", cat:"vn"},
+      {code:"UIH", vi:"Quy Nhơn", en:"Quy Nhon", airportVi:"Sân bay Phù Cát", airportEn:"Phu Cat Airport", countryVi:"Việt Nam", countryEn:"Vietnam", cat:"vn"},
+      {code:"BMV", vi:"Buôn Ma Thuột", en:"Buon Ma Thuot", airportVi:"Sân bay Buôn Ma Thuột", airportEn:"Buon Ma Thuot", countryVi:"Việt Nam", countryEn:"Vietnam", cat:"vn"},
+      {code:"PXU", vi:"Pleiku", en:"Pleiku", airportVi:"Sân bay Pleiku", airportEn:"Pleiku Airport", countryVi:"Việt Nam", countryEn:"Vietnam", cat:"vn"},
+      {code:"TTH", vi:"Tuy Hòa", en:"Tuy Hoa", airportVi:"Sân bay Tuy Hòa", airportEn:"Tuy Hoa Airport", countryVi:"Việt Nam", countryEn:"Vietnam", cat:"vn"},
+      {code:"THD", vi:"Thanh Hóa", en:"Thanh Hoa", airportVi:"Sân bay Thọ Xuân", airportEn:"Tho Xuan Airport", countryVi:"Việt Nam", countryEn:"Vietnam", cat:"vn"},
+      {code:"VCL", vi:"Chu Lai", en:"Chu Lai", airportVi:"Sân bay Chu Lai", airportEn:"Chu Lai Airport", countryVi:"Việt Nam", countryEn:"Vietnam", cat:"vn"},
+      {code:"VDH", vi:"Đồng Hới", en:"Dong Hoi", airportVi:"Sân bay Đồng Hới", airportEn:"Dong Hoi Airport", countryVi:"Việt Nam", countryEn:"Vietnam", cat:"vn"},
+      {code:"DIN", vi:"Điện Biên Phủ", en:"Dien Bien Phu", airportVi:"Sân bay Điện Biên", airportEn:"Dien Bien Airport", countryVi:"Việt Nam", countryEn:"Vietnam", cat:"vn"},
+      {code:"VCS", vi:"Côn Đảo", en:"Con Dao", airportVi:"Sân bay Cỏ Ống", airportEn:"Con Dao Airport", countryVi:"Việt Nam", countryEn:"Vietnam", cat:"vn"},
+      {code:"VDO", vi:"Vân Đồn", en:"Van Don", airportVi:"Sân bay Quốc tế Vân Đồn", airportEn:"Van Don Intl", countryVi:"Việt Nam", countryEn:"Vietnam", cat:"vn"},
+
+      /* Asia & Pacific */
+      {code:"BKK", vi:"Bangkok", en:"Bangkok", airportVi:"Sân bay Suvarnabhumi", airportEn:"Suvarnabhumi Intl", countryVi:"Thái Lan", countryEn:"Thailand", cat:"asia"},
+      {code:"DMK", vi:"Bangkok (Don Mueang)", en:"Bangkok (Don Mueang)", airportVi:"Sân bay Don Mueang", airportEn:"Don Mueang Intl", countryVi:"Thái Lan", countryEn:"Thailand", cat:"asia"},
+      {code:"SIN", vi:"Singapore", en:"Singapore", airportVi:"Sân bay Changi", airportEn:"Singapore Changi", countryVi:"Singapore", countryEn:"Singapore", cat:"asia"},
+      {code:"TYO", vi:"Tokyo (Tất cả)", en:"Tokyo (All Airports)", airportVi:"Haneda & Narita", airportEn:"Haneda & Narita", countryVi:"Nhật Bản", countryEn:"Japan", cat:"asia"},
+      {code:"NRT", vi:"Tokyo (Narita)", en:"Tokyo (Narita)", airportVi:"Sân bay Quốc tế Narita", airportEn:"Narita Intl", countryVi:"Nhật Bản", countryEn:"Japan", cat:"asia"},
+      {code:"HND", vi:"Tokyo (Haneda)", en:"Tokyo (Haneda)", airportVi:"Sân bay Quốc tế Haneda", airportEn:"Haneda Airport", countryVi:"Nhật Bản", countryEn:"Japan", cat:"asia"},
+      {code:"KIX", vi:"Osaka (Kansai)", en:"Osaka (Kansai)", airportVi:"Sân bay Quốc tế Kansai", airportEn:"Kansai Intl", countryVi:"Nhật Bản", countryEn:"Japan", cat:"asia"},
+      {code:"FUK", vi:"Fukuoka", en:"Fukuoka", airportVi:"Sân bay Fukuoka", airportEn:"Fukuoka Airport", countryVi:"Nhật Bản", countryEn:"Japan", cat:"asia"},
+      {code:"SEL", vi:"Seoul (Tất cả)", en:"Seoul (All Airports)", airportVi:"Incheon & Gimpo", airportEn:"Incheon & Gimpo", countryVi:"Hàn Quốc", countryEn:"South Korea", cat:"asia"},
+      {code:"ICN", vi:"Seoul (Incheon)", en:"Seoul (Incheon)", airportVi:"Sân bay Quốc tế Incheon", airportEn:"Incheon Intl", countryVi:"Hàn Quốc", countryEn:"South Korea", cat:"asia"},
+      {code:"PUS", vi:"Busan", en:"Busan", airportVi:"Sân bay Quốc tế Gimhae", airportEn:"Gimhae Intl", countryVi:"Hàn Quốc", countryEn:"South Korea", cat:"asia"},
+      {code:"TPE", vi:"Đài Bắc (Taoyuan)", en:"Taipei (Taoyuan)", airportVi:"Sân bay Đào Viên", airportEn:"Taoyuan Intl", countryVi:"Đài Loan", countryEn:"Taiwan", cat:"asia"},
+      {code:"KHH", vi:"Cao Hùng", en:"Kaohsiung", airportVi:"Sân bay Cao Hùng", airportEn:"Kaohsiung Intl", countryVi:"Đài Loan", countryEn:"Taiwan", cat:"asia"},
+      {code:"HKG", vi:"Hồng Kông", en:"Hong Kong", airportVi:"Sân bay Quốc tế Hồng Kông", airportEn:"Hong Kong Intl", countryVi:"Hồng Kông", countryEn:"Hong Kong", cat:"asia"},
+      {code:"KUL", vi:"Kuala Lumpur", en:"Kuala Lumpur", airportVi:"Sân bay Quốc tế KLIA", airportEn:"Kuala Lumpur Intl", countryVi:"Malaysia", countryEn:"Malaysia", cat:"asia"},
+      {code:"PEN", vi:"Penang", en:"Penang", airportVi:"Sân bay Quốc tế Penang", airportEn:"Penang Intl", countryVi:"Malaysia", countryEn:"Malaysia", cat:"asia"},
+      {code:"MNL", vi:"Manila", en:"Manila", airportVi:"Sân bay Ninoy Aquino", airportEn:"Ninoy Aquino Intl", countryVi:"Philippines", countryEn:"Philippines", cat:"asia"},
+      {code:"DPS", vi:"Bali (Denpasar)", en:"Bali (Denpasar)", airportVi:"Sân bay Ngurah Rai", airportEn:"Ngurah Rai Intl", countryVi:"Indonesia", countryEn:"Indonesia", cat:"asia"},
+      {code:"PNH", vi:"Phnom Penh", en:"Phnom Penh", airportVi:"Sân bay Phnom Penh", airportEn:"Phnom Penh Intl", countryVi:"Campuchia", countryEn:"Cambodia", cat:"asia"},
+      {code:"SAI", vi:"Siem Reap", en:"Siem Reap", airportVi:"Sân bay Siem Reap Angkor", airportEn:"Siem Reap Angkor", countryVi:"Campuchia", countryEn:"Cambodia", cat:"asia"},
+      {code:"PEK", vi:"Bắc Kinh (Thủ đô)", en:"Beijing (Capital)", airportVi:"Sân bay Thủ Đô", airportEn:"Beijing Capital", countryVi:"Trung Quốc", countryEn:"China", cat:"asia"},
+      {code:"PVG", vi:"Thượng Hải (Phố Đông)", en:"Shanghai (Pudong)", airportVi:"Sân bay Phố Đông", airportEn:"Pudong Intl", countryVi:"Trung Quốc", countryEn:"China", cat:"asia"},
+      {code:"CAN", vi:"Quảng Châu", en:"Guangzhou", airportVi:"Sân bay Bạch Vân", airportEn:"Baiyun Intl", countryVi:"Trung Quốc", countryEn:"China", cat:"asia"},
+
+      /* Americas */
+      {code:"LAX", vi:"Los Angeles", en:"Los Angeles", airportVi:"Sân bay Quốc tế Los Angeles", airportEn:"Los Angeles Intl", countryVi:"Mỹ (California)", countryEn:"USA (California)", cat:"us"},
+      {code:"SFO", vi:"San Francisco", en:"San Francisco", airportVi:"Sân bay Quốc tế San Francisco", airportEn:"San Francisco Intl", countryVi:"Mỹ (California)", countryEn:"USA (California)", cat:"us"},
+      {code:"SJC", vi:"San Jose", en:"San Jose", airportVi:"Sân bay Mineta San Jose", airportEn:"Norman Y. Mineta San Jose", countryVi:"Mỹ (California)", countryEn:"USA (California)", cat:"us"},
+      {code:"SAN", vi:"San Diego", en:"San Diego", airportVi:"Sân bay San Diego", airportEn:"San Diego Intl", countryVi:"Mỹ (California)", countryEn:"USA (California)", cat:"us"},
+      {code:"JFK", vi:"New York (JFK)", en:"New York (JFK)", airportVi:"Sân bay John F. Kennedy", airportEn:"John F. Kennedy Intl", countryVi:"Mỹ (New York)", countryEn:"USA (New York)", cat:"us"},
+      {code:"EWR", vi:"New York (Newark)", en:"New York (Newark)", airportVi:"Sân bay Newark Liberty", airportEn:"Newark Liberty", countryVi:"Mỹ (New Jersey)", countryEn:"USA (New Jersey)", cat:"us"},
+      {code:"SEA", vi:"Seattle", en:"Seattle", airportVi:"Sân bay Seattle-Tacoma", airportEn:"Seattle-Tacoma Intl", countryVi:"Mỹ (Washington)", countryEn:"USA (Washington)", cat:"us"},
+      {code:"ORD", vi:"Chicago (O'Hare)", en:"Chicago (O'Hare)", airportVi:"Sân bay O'Hare", airportEn:"O'Hare Intl", countryVi:"Mỹ (Illinois)", countryEn:"USA (Illinois)", cat:"us"},
+      {code:"DFW", vi:"Dallas / Fort Worth", en:"Dallas / Fort Worth", airportVi:"Sân bay Dallas/Fort Worth", airportEn:"Dallas/Fort Worth", countryVi:"Mỹ (Texas)", countryEn:"USA (Texas)", cat:"us"},
+      {code:"IAH", vi:"Houston", en:"Houston", airportVi:"Sân bay George Bush", airportEn:"George Bush Intercontinental", countryVi:"Mỹ (Texas)", countryEn:"USA (Texas)", cat:"us"},
+      {code:"ATL", vi:"Atlanta", en:"Atlanta", airportVi:"Sân bay Hartsfield-Jackson", airportEn:"Hartsfield-Jackson", countryVi:"Mỹ (Georgia)", countryEn:"USA (Georgia)", cat:"us"},
+      {code:"BOS", vi:"Boston", en:"Boston", airportVi:"Sân bay Logan", airportEn:"Logan Intl", countryVi:"Mỹ (Massachusetts)", countryEn:"USA (Massachusetts)", cat:"us"},
+      {code:"IAD", vi:"Washington D.C. (Dulles)", en:"Washington D.C. (Dulles)", airportVi:"Sân bay Dulles", airportEn:"Washington Dulles", countryVi:"Mỹ", countryEn:"USA", cat:"us"},
+      {code:"HNL", vi:"Honolulu (Hawaii)", en:"Honolulu (Hawaii)", airportVi:"Sân bay Daniel K. Inouye", airportEn:"Daniel K. Inouye Intl", countryVi:"Mỹ (Hawaii)", countryEn:"USA (Hawaii)", cat:"us"},
+      {code:"YVR", vi:"Vancouver", en:"Vancouver", airportVi:"Sân bay Vancouver", airportEn:"Vancouver Intl", countryVi:"Canada", countryEn:"Canada", cat:"us"},
+      {code:"YYZ", vi:"Toronto", en:"Toronto", airportVi:"Sân bay Pearson", airportEn:"Toronto Pearson", countryVi:"Canada", countryEn:"Canada", cat:"us"},
+
+      /* Europe, Australia & Middle East */
+      {code:"SYD", vi:"Sydney", en:"Sydney", airportVi:"Sân bay Kingsford Smith", airportEn:"Kingsford Smith", countryVi:"Úc", countryEn:"Australia", cat:"eu"},
+      {code:"MEL", vi:"Melbourne", en:"Melbourne", airportVi:"Sân bay Melbourne", airportEn:"Melbourne Airport", countryVi:"Úc", countryEn:"Australia", cat:"eu"},
+      {code:"BNE", vi:"Brisbane", en:"Brisbane", airportVi:"Sân bay Brisbane", airportEn:"Brisbane Airport", countryVi:"Úc", countryEn:"Australia", cat:"eu"},
+      {code:"AKL", vi:"Auckland", en:"Auckland", airportVi:"Sân bay Auckland", airportEn:"Auckland Airport", countryVi:"New Zealand", countryEn:"New Zealand", cat:"eu"},
+      {code:"CDG", vi:"Paris (Charles de Gaulle)", en:"Paris (Charles de Gaulle)", airportVi:"Sân bay Charles de Gaulle", airportEn:"Charles de Gaulle", countryVi:"Pháp", countryEn:"France", cat:"eu"},
+      {code:"LHR", vi:"London (Heathrow)", en:"London (Heathrow)", airportVi:"Sân bay Heathrow", airportEn:"London Heathrow", countryVi:"Vương quốc Anh", countryEn:"United Kingdom", cat:"eu"},
+      {code:"FRA", vi:"Frankfurt", en:"Frankfurt", airportVi:"Sân bay Frankfurt", airportEn:"Frankfurt Airport", countryVi:"Đức", countryEn:"Germany", cat:"eu"},
+      {code:"AMS", vi:"Amsterdam", en:"Amsterdam", airportVi:"Sân bay Schiphol", airportEn:"Schiphol", countryVi:"Hà Lan", countryEn:"Netherlands", cat:"eu"},
+      {code:"FCO", vi:"Rome", en:"Rome", airportVi:"Sân bay Fiumicino", airportEn:"Leonardo da Vinci Fiumicino", countryVi:"Ý", countryEn:"Italy", cat:"eu"},
+      {code:"DXB", vi:"Dubai", en:"Dubai", airportVi:"Sân bay Quốc tế Dubai", airportEn:"Dubai Intl", countryVi:"UAE", countryEn:"UAE", cat:"eu"},
+      {code:"DOH", vi:"Doha", en:"Doha", airportVi:"Sân bay Hamad", airportEn:"Hamad Intl", countryVi:"Qatar", countryEn:"Qatar", cat:"eu"},
+      {code:"IST", vi:"Istanbul", en:"Istanbul", airportVi:"Sân bay Istanbul", airportEn:"Istanbul Airport", countryVi:"Thổ Nhĩ Kỳ", countryEn:"Turkey", cat:"eu"}
     ];
-    function cityName(c){ return lang==="vi" ? c.vi : c.en; }
-    function cityByCode(code){ for (var i=0;i<CITIES.length;i++) if (CITIES[i].code===code) return CITIES[i]; return CITIES[0]; }
+
+    function airportByCode(code){
+      var c = (code || "").toUpperCase();
+      for (var i=0; i<AIRPORTS.length; i++){
+        if (AIRPORTS[i].code === c) return AIRPORTS[i];
+      }
+      return {code:c, vi:c, en:c, airportVi:"Sân bay "+c, airportEn:c+" Airport", countryVi:"Quốc tế", countryEn:"International"};
+    }
+
+    var CITIES = AIRPORTS;
+    function cityName(c){ return lang==="vi" ? (c.vi || c.nameVi) : (c.en || c.nameEn); }
+    function cityByCode(code){ return airportByCode(code); }
 
     var AIRLINES = [
       {code:"VN", name:"Vietnam Airlines", color:"#0b5bd3"},
       {code:"VJ", name:"Vietjet Air", color:"#e5231b"},
       {code:"QH", name:"Bamboo Airways", color:"#0e9f6e"},
-      {code:"VU", name:"Vietravel Airlines", color:"#e8871a"}
+      {code:"VU", name:"Vietravel Airlines", color:"#e8871a"},
+      {code:"SQ", name:"Singapore Airlines", color:"#d4af37"},
+      {code:"JL", name:"Japan Airlines", color:"#cc0000"},
+      {code:"KE", name:"Korean Air", color:"#005a9c"},
+      {code:"TG", name:"Thai Airways", color:"#4a154b"},
+      {code:"CX", name:"Cathay Pacific", color:"#006564"},
+      {code:"UA", name:"United Airlines", color:"#002244"},
+      {code:"EK", name:"Emirates", color:"#d71921"},
+      {code:"QR", name:"Qatar Airways", color:"#5c0632"}
     ];
 
     /* All prices below are stored in base USD; display conversion happens in fmtMoney() */
@@ -255,6 +367,7 @@
       }
       if ($("#tripDirectLink")) $("#tripDirectLink").href = targetUrl;
       if ($("#tripFallbackLink")) $("#tripFallbackLink").href = targetUrl;
+      if ($("#tripCookieDirectBtn")) $("#tripCookieDirectBtn").href = targetUrl;
       if (modal) modal.classList.remove("hidden");
       document.body.style.overflow = "hidden";
     }
@@ -315,14 +428,144 @@
     }
 
     /* ============ Search setup ============ */
+
+    /* ============ Searchable Combobox Controller ============ */
+    function setupCombobox(cfg){
+      var wrap = $(cfg.wrapId), input = $(cfg.inputId), badge = $(cfg.badgeId), hidden = $(cfg.hiddenId), menu = $(cfg.menuId);
+      if (!wrap || !input || !hidden || !menu) return;
+
+      function renderItems(filterText){
+        var q = removeDiacritics(filterText || "").trim();
+        var matches = [];
+        if (!q){
+          matches = cfg.items.slice(0, 30);
+        } else {
+          matches = cfg.items.filter(function(item){
+            var c = (item.code || "").toLowerCase();
+            var nVi = removeDiacritics(item.vi || item.nameVi || "");
+            var nEn = (item.en || item.nameEn || "").toLowerCase();
+            var aVi = removeDiacritics(item.airportVi || "");
+            var aEn = (item.airportEn || "").toLowerCase();
+            var coVi = removeDiacritics(item.countryVi || "");
+            var coEn = (item.countryEn || "").toLowerCase();
+            return c.indexOf(q) >= 0 || nVi.indexOf(q) >= 0 || nEn.indexOf(q) >= 0 ||
+                   aVi.indexOf(q) >= 0 || aEn.indexOf(q) >= 0 || coVi.indexOf(q) >= 0 || coEn.indexOf(q) >= 0;
+          });
+        }
+
+        var html = "";
+        if (matches.length > 0){
+          var currentCat = "";
+          matches.forEach(function(item){
+            var catName = "";
+            if (item.cat === "popular") catName = t("popularAirports");
+            else if (item.cat === "vn") catName = t("vietnamAirports");
+            else if (item.cat === "asia") catName = t("asiaAirports");
+            else if (item.cat === "us") catName = t("americaAirports");
+            else if (item.cat === "eu") catName = t("europeAirports");
+
+            if (!q && catName && catName !== currentCat){
+              html += '<div class="combo-cat-title">'+esc(catName)+'</div>';
+              currentCat = catName;
+            }
+
+            var name = lang==="vi" ? (item.vi || item.nameVi) : (item.en || item.nameEn);
+            var sub = (item.airportVi ? (lang==="vi"?item.airportVi:item.airportEn) + " · " : "") + (lang==="vi"?(item.countryVi||""):(item.countryEn||""));
+            var activeClass = hidden.value === item.code ? " active" : "";
+            html += '<div class="combo-item'+activeClass+'" data-code="'+esc(item.code)+'" data-name="'+esc(name)+'">' +
+                      '<div class="ci-main"><div class="ci-city">'+esc(name)+'</div>' +
+                      (sub ? '<div class="ci-sub">'+esc(sub)+'</div>' : '') +
+                      '</div>' +
+                      (item.code ? '<span class="ci-code">'+esc(item.code)+'</span>' : '') +
+                    '</div>';
+          });
+        } else if (q) {
+          var customCode = (q.length <= 4 ? q.toUpperCase() : q.slice(0,3).toUpperCase());
+          html += '<div class="combo-item active" data-code="'+esc(customCode)+'" data-name="'+esc(filterText)+'">' +
+                    '<div class="ci-main"><div class="ci-city">'+esc(t("customSearchPrefix"))+' "'+esc(filterText)+'"</div>' +
+                    '<div class="ci-sub">Mở rộng tìm kiếm toàn cầu</div></div>' +
+                    '<span class="ci-code">'+esc(customCode)+'</span>' +
+                  '</div>';
+        } else {
+          html = '<div class="combo-empty">Nhập tên thành phố, quốc gia hoặc mã sân bay (VD: Tokyo, NRT, LAX, Seoul...)</div>';
+        }
+        menu.innerHTML = html;
+
+        $$(cfg.menuId + " .combo-item").forEach(function(el){
+          el.addEventListener("mousedown", function(e){
+            e.preventDefault();
+            selectItem(el.getAttribute("data-code"), el.getAttribute("data-name"));
+          });
+        });
+      }
+
+      function selectItem(code, name){
+        hidden.value = code;
+        input.value = name + (code ? " (" + code + ")" : "");
+        if (badge) badge.textContent = code;
+        menu.classList.add("hidden");
+        if (cfg.onSelect) cfg.onSelect(code, name);
+      }
+
+      input.addEventListener("focus", function(){
+        renderItems(input.value);
+        menu.classList.remove("hidden");
+        input.select();
+      });
+      input.addEventListener("input", function(){
+        renderItems(input.value);
+        menu.classList.remove("hidden");
+      });
+      input.addEventListener("keydown", function(e){
+        if (e.key === "Enter"){
+          e.preventDefault();
+          var first = $(cfg.menuId + " .combo-item");
+          if (first) {
+            selectItem(first.getAttribute("data-code"), first.getAttribute("data-name"));
+          } else if (input.value.trim()){
+            var raw = input.value.trim();
+            selectItem(raw.slice(0,3).toUpperCase(), raw);
+          }
+        } else if (e.key === "Escape"){
+          menu.classList.add("hidden");
+        }
+      });
+
+      document.addEventListener("click", function(e){
+        if (!wrap.contains(e.target)) menu.classList.add("hidden");
+      });
+
+      // Initial set
+      var initItem = airportByCode(cfg.defaultCode);
+      if (initItem){
+        var name = lang==="vi" ? (initItem.vi || initItem.nameVi) : (initItem.en || initItem.nameEn);
+        selectItem(initItem.code, name);
+      }
+    }
+
     function fillCitySelects(){
-      var opts = CITIES.map(function(c){ return '<option value="'+c.code+'">'+esc(cityName(c))+' ('+c.code+')</option>'; }).join("");
-      $("#fFrom").innerHTML = opts; $("#fTo").innerHTML = opts; $("#hCity").innerHTML = opts;
-      $("#fFrom").value = "SGN"; $("#fTo").value = "DAD"; $("#hCity").value = "PQC";
-      var placeOpts = '<option value="all">'+esc(t("allPlaces"))+'</option>' + tickets.filter(function(x){return x.on;}).map(function(x){
-        return '<option value="'+x.id+'">'+esc(lang==="vi"?x.nameVi:x.nameEn)+'</option>';
-      }).join("");
-      $("#tPlace").innerHTML = placeOpts;
+      setupCombobox({
+        wrapId: "#wrapFrom", inputId: "#fFromInput", badgeId: "#fFromBadge", hiddenId: "#fFrom", menuId: "#fFromMenu",
+        items: AIRPORTS, defaultCode: $("#fFrom") ? $("#fFrom").value || "SGN" : "SGN"
+      });
+      setupCombobox({
+        wrapId: "#wrapTo", inputId: "#fToInput", badgeId: "#fToBadge", hiddenId: "#fTo", menuId: "#fToMenu",
+        items: AIRPORTS, defaultCode: $("#fTo") ? $("#fTo").value || "HAN" : "HAN"
+      });
+      setupCombobox({
+        wrapId: "#wrapHotel", inputId: "#hCityInput", badgeId: "#hCityBadge", hiddenId: "#hCity", menuId: "#hCityMenu",
+        items: AIRPORTS, defaultCode: $("#hCity") ? $("#hCity").value || "PQC" : "PQC"
+      });
+
+      var ticketItems = [{code:"all", vi:t("allPlacesOption"), en:t("allPlacesOption"), countryVi:"", countryEn:""}].concat(
+        tickets.filter(function(x){return x.on;}).map(function(x){
+          return {code:String(x.id), vi:x.nameVi, en:x.nameEn, countryVi:lang==="vi"?x.cityVi:x.cityEn, countryEn:lang==="vi"?x.cityVi:x.cityEn};
+        })
+      );
+      setupCombobox({
+        wrapId: "#wrapTicket", inputId: "#tPlaceInput", badgeId: null, hiddenId: "#tPlace", menuId: "#tPlaceMenu",
+        items: ticketItems, defaultCode: "all"
+      });
     }
     function setDates(){
       var d1 = new Date(today.getTime()+7*864e5), d2 = new Date(today.getTime()+10*864e5);
@@ -343,7 +586,12 @@
       ["flights","hotels","tickets"].forEach(function(x){ $("#pane-"+x).classList.toggle("hidden", x!==k); });
     }
     $("#swapBtn").addEventListener("click", function(){
-      var a = $("#fFrom").value; $("#fFrom").value = $("#fTo").value; $("#fTo").value = a;
+      var fromCode = $("#fFrom").value, toCode = $("#fTo").value;
+      var fromTxt = $("#fFromInput").value, toTxt = $("#fToInput").value;
+      var fromBadge = $("#fFromBadge").textContent, toBadge = $("#fToBadge").textContent;
+      $("#fFrom").value = toCode; $("#fTo").value = fromCode;
+      $("#fFromInput").value = toTxt; $("#fToInput").value = fromTxt;
+      $("#fFromBadge").textContent = toBadge; $("#fToBadge").textContent = fromBadge;
     });
     $$('input[name="trip"]').forEach(function(r){
       r.addEventListener("change", function(){
@@ -478,14 +726,28 @@
       lastSearch = {kind:kind};
       var listEl = $("#resList");
       if (kind==="flights"){
-        var from = $("#fFrom").value, to = $("#fTo").value, date = $("#fDepart").value, pax = parseInt($("#fPax").value,10);
+        var from = ($("#fFrom").value || "SGN").toUpperCase();
+        var to = ($("#fTo").value || "HAN").toUpperCase();
+        var date = $("#fDepart").value;
+        var pax = parseInt($("#fPax").value,10);
+        var round = $('input[name="trip"]:checked').value === "round";
+        var rdate = $("#fReturn").value;
+
         if (from===to){ toast(t("sameCity")); return; }
         lastSearch.from = from; lastSearch.to = to; lastSearch.date = date; lastSearch.pax = pax;
+
+        // Build Trip.com Flight search URL for showfarefirst
+        var tripFlightUrl = "https://vn.trip.com/flights/showfarefirst?dcity=" + from.toLowerCase() + "&acity=" + to.toLowerCase() + "&ddate=" + date + (round && rdate ? "&rdate=" + rdate : "") + "&quantity=" + pax + "&curr=" + currency;
+        lastSearch.tripUrl = tripLink(tripFlightUrl);
+
         lastResults = sortFlights(genFlights(from, to, date), $("#sortSel").value);
         $("#sortSel").disabled = false;
-        var bannerHtml = '<div class="trip-search-banner"><div class="t-text"><strong data-i18n="tripSearchBanner">'+esc(t("tripSearchBanner"))+'</strong><p data-i18n="tripSearchBannerSub">'+esc(t("tripSearchBannerSub"))+'</p></div><button type="button" class="btn-trip-banner" id="bannerTripFlightBtn" data-i18n="openTripPortal">'+esc(t("openTripPortal"))+'</button></div>';
+        var fromObj = cityByCode(from), toObj = cityByCode(to);
+        var fromName = cityName(fromObj), toName = cityName(toObj);
+
+        var bannerHtml = '<div class="trip-search-banner"><div class="t-text"><strong>Tìm tất cả chuyến bay ' + esc(fromName) + ' (' + from + ') → ' + esc(toName) + ' (' + to + ') trên Trip.com</strong><p>So sánh giá vé trực tiếp từ 5.000+ hãng hàng không toàn cầu với giá đối tác tốt nhất.</p></div><button type="button" class="btn-trip-banner" id="bannerTripFlightBtn">Đặt vé ' + from + ' → ' + to + ' trên Trip.com ↗</button></div>';
         listEl.innerHTML = bannerHtml + lastResults.map(function(f){ return flightCard(f, pax); }).join("");
-        showResults(t("resultsFlights",{from:cityName(cityByCode(from)), to:cityName(cityByCode(to))}), fmtDate(date) + " · " + t("foundN",{n:lastResults.length}));
+        showResults(t("resultsFlights",{from:fromName, to:toName}), fmtDate(date) + " · " + t("foundN",{n:lastResults.length}));
       } else if (kind==="hotels"){
         var city = $("#hCity").value, ci = $("#hIn").value, co = $("#hOut").value;
         var nights = Math.max(1, Math.round((new Date(co) - new Date(ci)) / 864e5));
@@ -553,7 +815,9 @@
     function bindBookButtons(){
       $$("[data-trip-flight]").forEach(function(b){
         if (b.dataset.bound) return; b.dataset.bound = "1";
-        b.addEventListener("click", function(){ openTripPortal("flights"); });
+        b.addEventListener("click", function(){
+          openTripPortal("flights", lastSearch && lastSearch.tripUrl ? lastSearch.tripUrl : null);
+        });
       });
       $$("[data-trip-hotel]").forEach(function(b){
         if (b.dataset.bound) return; b.dataset.bound = "1";
@@ -574,7 +838,9 @@
       var bannerFlight = $("#bannerTripFlightBtn");
       if (bannerFlight && !bannerFlight.dataset.bound){
         bannerFlight.dataset.bound = "1";
-        bannerFlight.addEventListener("click", function(){ openTripPortal("flights"); });
+        bannerFlight.addEventListener("click", function(){
+          openTripPortal("flights", lastSearch && lastSearch.tripUrl ? lastSearch.tripUrl : null);
+        });
       }
       var bannerHotel = $("#bannerTripHotelBtn");
       if (bannerHotel && !bannerHotel.dataset.bound){
@@ -819,7 +1085,14 @@
     var openTripBtn = $("#openTripFlightsBtn");
     if (openTripBtn){
       openTripBtn.addEventListener("click", function(){
-        openTripPortal("flights");
+        var from = ($("#fFrom").value || "SGN").toLowerCase();
+        var to = ($("#fTo").value || "HAN").toLowerCase();
+        var date = $("#fDepart").value;
+        var round = $('input[name="trip"]:checked') && $('input[name="trip"]:checked').value === "round";
+        var rdate = $("#fReturn") ? $("#fReturn").value : "";
+        var pax = $("#fPax") ? parseInt($("#fPax").value,10) : 1;
+        var url = "https://vn.trip.com/flights/showfarefirst?dcity=" + from + "&acity=" + to + "&ddate=" + date + (round && rdate ? "&rdate=" + rdate : "") + "&quantity=" + pax + "&curr=" + currency;
+        openTripPortal("flights", tripLink(url));
       });
     }
     var openTripHotelsBtn = $("#openTripHotelsBtn");

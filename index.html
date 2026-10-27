@@ -93,9 +93,25 @@
             <label><input type="radio" name="trip" value="oneway" /> <span data-i18n="oneWay">Một chiều</span></label>
           </div>
           <div class="grid-form">
-            <div class="field span3"><label data-i18n="from">Điểm đi</label><select id="fFrom"></select></div>
+            <div class="field span3 combo-wrap" id="wrapFrom">
+              <label data-i18n="from">Điểm đi</label>
+              <div class="combo-box">
+                <input type="text" id="fFromInput" class="combo-input" placeholder="Chọn hoặc nhập điểm đi..." autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" />
+                <span class="combo-badge" id="fFromBadge">SGN</span>
+                <input type="hidden" id="fFrom" value="SGN" />
+              </div>
+              <div class="combo-menu hidden" id="fFromMenu"></div>
+            </div>
             <div class="swap"><button type="button" id="swapBtn" aria-label="Đảo chiều"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3 4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4"/></svg></button></div>
-            <div class="field span3"><label data-i18n="to">Điểm đến</label><select id="fTo"></select></div>
+            <div class="field span3 combo-wrap" id="wrapTo">
+              <label data-i18n="to">Điểm đến</label>
+              <div class="combo-box">
+                <input type="text" id="fToInput" class="combo-input" placeholder="Chọn hoặc nhập điểm đến..." autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" />
+                <span class="combo-badge" id="fToBadge">HAN</span>
+                <input type="hidden" id="fTo" value="HAN" />
+              </div>
+              <div class="combo-menu hidden" id="fToMenu"></div>
+            </div>
             <div class="field span2"><label data-i18n="depart">Ngày đi</label><input type="date" id="fDepart" /></div>
             <div class="field span2"><label data-i18n="return">Ngày về</label><input type="date" id="fReturn" /></div>
             <div class="field span2"><label data-i18n="pax">Hành khách</label>
@@ -117,7 +133,15 @@
         <!-- Hotels pane -->
         <form class="pane hidden" id="pane-hotels">
           <div class="grid-form">
-            <div class="field span4"><label data-i18n="destination">Điểm đến</label><select id="hCity"></select></div>
+            <div class="field span4 combo-wrap" id="wrapHotel">
+              <label data-i18n="destination">Điểm đến</label>
+              <div class="combo-box">
+                <input type="text" id="hCityInput" class="combo-input" placeholder="Chọn hoặc nhập thành phố / khách sạn..." autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" />
+                <span class="combo-badge" id="hCityBadge">PQC</span>
+                <input type="hidden" id="hCity" value="PQC" />
+              </div>
+              <div class="combo-menu hidden" id="hCityMenu"></div>
+            </div>
             <div class="field span2"><label data-i18n="checkin">Nhận phòng</label><input type="date" id="hIn" /></div>
             <div class="field span2"><label data-i18n="checkout">Trả phòng</label><input type="date" id="hOut" /></div>
             <div class="field span2"><label data-i18n="rooms">Phòng</label>
@@ -142,7 +166,14 @@
         <!-- Tickets pane -->
         <form class="pane hidden" id="pane-tickets">
           <div class="grid-form">
-            <div class="field span6"><label data-i18n="attraction">Điểm tham quan</label><select id="tPlace"></select></div>
+            <div class="field span6 combo-wrap" id="wrapTicket">
+              <label data-i18n="attraction">Điểm tham quan</label>
+              <div class="combo-box">
+                <input type="text" id="tPlaceInput" class="combo-input" placeholder="Chọn hoặc tìm điểm tham quan, hoạt động..." autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" />
+                <input type="hidden" id="tPlace" value="all" />
+              </div>
+              <div class="combo-menu hidden" id="tPlaceMenu"></div>
+            </div>
             <div class="field span3"><label data-i18n="visitDate">Ngày tham quan</label><input type="date" id="tDate" /></div>
             <div class="field span3"><label data-i18n="ticketQty">Số vé</label>
               <select id="tQty"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select>
@@ -406,33 +437,41 @@
     </div>
   </div>
 
-  <!-- Trip.com Flight Booking Iframe Modal -->
+  <!-- Trip.com Service Booking Iframe Modal -->
   <div class="overlay hidden" id="tripModal">
     <div class="modal modal-iframe" role="dialog" aria-modal="true" aria-labelledby="tripModalTitle">
       <div class="mhead iframe-mhead">
-        <div class="iframe-title-wrap">
-          <span class="trip-badge">Trip.com Partner</span>
-          <h3 id="tripModalTitle" data-i18n="tripModalTitle">Đặt vé máy bay trực tuyến — Trip.com</h3>
+        <div class="top-row">
+          <div class="iframe-title-wrap">
+            <span class="trip-badge">Trip.com Partner</span>
+            <h3 id="tripModalTitle" data-i18n="tripModalTitle">Cổng dịch vụ trực tuyến — Trip.com</h3>
+          </div>
+          <button class="x" id="tripModalClose" type="button" aria-label="Đóng">✕</button>
         </div>
         <div class="iframe-actions">
           <a id="tripDirectLink" class="btn-ghost-sm" href="https://vn.trip.com/flights/" target="_blank" rel="noopener sponsored">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
-            <span data-i18n="openInNewTab">Mở trong tab mới ↗</span>
+            <span data-i18n="openInNewTab">Mở trực tiếp trên Trip.com ↗</span>
           </a>
-          <button class="x" id="tripModalClose" type="button" aria-label="Đóng">✕</button>
         </div>
       </div>
       <div class="iframe-body">
+        <div class="cookie-help-bar" id="tripCookieBar">
+          <div class="cookie-help-text">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <span data-i18n="cookieNotice">Tránh lỗi chặn cookie trên Safari/iPhone: Nhấn nút bên cạnh để mở trực tiếp không bị lỗi.</span>
+          </div>
+          <a id="tripCookieDirectBtn" class="btn-cookie-open" target="_blank" rel="noopener sponsored" data-i18n="openDirectTrip">Mở trên Trip.com ↗</a>
+        </div>
         <div class="iframe-loading" id="tripIframeLoading">
           <div class="spinner"></div>
-          <p data-i18n="tripIframeLoading">Đang kết nối cổng đặt vé Trip.com...</p>
+          <p data-i18n="tripIframeLoading">Đang kết nối cổng dịch vụ Trip.com...</p>
         </div>
         <iframe
           id="tripFlightIframe"
           src="about:blank"
-          title="Trip.com Flight Booking"
-          allow="payment; geolocation; camera; microphone; clipboard-write; fullscreen"
-          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-top-navigation-by-user-activation"
+          title="Trip.com Booking Portal"
+          allow="payment; geolocation; camera; microphone; clipboard-write; fullscreen; storage-access; cross-origin-isolated"
         ></iframe>
         <div class="iframe-footer-note">
           <span data-i18n="tripIframeFallback">Nếu giao diện không tải do thiết lập bảo mật của trình duyệt, vui lòng</span>
