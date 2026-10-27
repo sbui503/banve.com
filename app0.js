@@ -52,7 +52,9 @@
         bkTitle:"Xác nhận đặt chỗ", bkPassenger:"Họ tên hành khách", bkName:"Họ và tên", bkContact:"Thông tin liên hệ", bkEmail:"Email nhận vé", bkPhone:"Số điện thoại",
         bkTotal:"Tổng thanh toán", bkConfirm:"Xác nhận & thanh toán", bkSuccess:"Đặt chỗ thành công!",
         bkPnrLabel:"Mã đặt chỗ của bạn", bkSuccessNote:"Vé điện tử đã được gửi tới email của bạn. Vui lòng mang theo mã đặt chỗ khi làm thủ tục.",
-        bkDone:"Hoàn tất", fillInfo:"Vui lòng nhập đầy đủ họ tên, email và số điện thoại.",
+        bkDone:"Hoàn tất",
+        bkTripNote:"Sau khi bấm xác nhận, hệ thống sẽ mở cổng dịch vụ Trip.com để hoàn tất xuất vé & thanh toán bảo mật.",
+        sendingToTrip:"Đang kết nối cổng dịch vụ Trip.com để hoàn tất đặt vé...", fillInfo:"Vui lòng nhập đầy đủ họ tên, email và số điện thoại.",
         saving:"Tiết kiệm {n}", statusPaid:"Đã thanh toán", statusPending:"Chờ thanh toán", statusCancelled:"Đã hủy",
         stOn:"Đang bán", stOff:"Tạm ngưng", toggle:"Bật/Tắt", confirmB:"Xác nhận", cancelB:"Huỷ đơn",
         toastCancelled:"Đã huỷ đơn {code}", toastConfirmed:"Đã xác nhận đơn {code}", toastPrice:"Đã cập nhật giá", toastToggled:"Đã cập nhật trạng thái hiển thị",
@@ -126,7 +128,9 @@
         bkTitle:"Confirm booking", bkPassenger:"Passenger name", bkName:"Full name", bkContact:"Contact details", bkEmail:"Email for e-ticket", bkPhone:"Phone number",
         bkTotal:"Total to pay", bkConfirm:"Confirm & pay", bkSuccess:"Booking successful!",
         bkPnrLabel:"Your booking code", bkSuccessNote:"Your e-ticket has been sent to your email. Please bring the booking code when you check in.",
-        bkDone:"Done", fillInfo:"Please fill in your name, email and phone number.",
+        bkDone:"Done",
+        bkTripNote:"After confirming, you will be directed to the secure Trip.com portal to complete ticketing & payment.",
+        sendingToTrip:"Connecting to Trip.com to complete your booking...", fillInfo:"Please fill in your name, email and phone number.",
         saving:"Save {n}", statusPaid:"Paid", statusPending:"Pending payment", statusCancelled:"Cancelled",
         stOn:"On sale", stOff:"Paused", toggle:"Toggle", confirmB:"Confirm", cancelB:"Cancel",
         toastCancelled:"Booking {code} cancelled", toastConfirmed:"Booking {code} confirmed", toastPrice:"Price updated", toastToggled:"Visibility updated",
@@ -676,10 +680,7 @@
         '<div class="body"><div class="meta"><span class="stars">'+stars(h.stars)+'</span><span>'+esc(lang==="vi"?h.cityVi:h.cityEn)+'</span></div>' +
         '<h3>'+esc(h.name)+'</h3><div class="meta"><span class="rate">'+h.rating+'</span><span>'+h.reviews.toLocaleString("vi-VN")+' '+esc(t("reviews"))+'</span></div>' +
         '<div class="foot"><div class="price"><small>'+esc(t("perNight"))+'</small><span class="old">'+fmtMoney(h.old)+'</span><b>'+fmtMoney(h.price)+'</b></div>' +
-        '<div class="prod-actions">' +
-        '<button type="button" data-book-hotel="'+h.id+'">'+esc(t("bookNow"))+'</button>' +
-        '<button type="button" class="btn-sub-trip" data-trip-hotel="'+h.id+'">'+esc(t("bookHotelTrip"))+'</button>' +
-        '</div></div></div></article>';
+        '<button type="button" data-book-hotel="'+h.id+'">'+esc(t("bookNow"))+'</button></div></div></article>';
     }
     function renderHotels(){ $("#hotelGrid").innerHTML = hotels.filter(function(h){return h.on;}).slice(0,3).map(hotelCard).join(""); bindBookButtons(); }
 
@@ -687,7 +688,7 @@
       var name = lang==="vi" ? x.nameVi : x.nameEn;
       var action = x.tripUrl
         ? '<a class="book-trip" href="'+esc(tripLink(x.tripUrl))+'" target="_blank" rel="noopener sponsored" data-trip-ticket-url="'+esc(tripLink(x.tripUrl))+'">'+esc(t("bookTrip"))+'</a>'
-        : '<div class="prod-actions"><button type="button" data-book-ticket="'+x.id+'">'+esc(t("bookNow"))+'</button><button type="button" class="btn-sub-trip" data-trip-ticket="'+x.id+'">'+esc(t("bookTicketTrip"))+'</button></div>';
+        : '<button type="button" data-book-ticket="'+x.id+'">'+esc(t("bookNow"))+'</button>';
       return '<article class="prod"><div class="ph"><img src="'+x.img+'" alt="'+esc(name)+'" /><span class="badge">-'+discountPct(x.old,x.price)+'%</span></div>' +
         '<div class="body"><div class="meta"><span>'+esc(lang==="vi"?x.cityVi:x.cityEn)+'</span></div><h3>'+esc(name)+'</h3>' +
         '<div class="meta"><span class="rate">'+x.rating+'</span><span>'+x.reviews.toLocaleString("vi-VN")+' '+esc(t("reviews"))+'</span></div>' +
@@ -712,8 +713,7 @@
         (f.seats>0 && f.seats<=10 ? '<span class="tag hot">'+esc(t("onlySeats",{n:f.seats}))+'</span>' : '<span class="tag">'+f.seats+' '+esc(t("seatsLeft"))+'</span>') +
         '</div><div style="text-align:right"><div class="t">'+fmtTime(f.arr)+'</div><div class="c">'+lastSearch.to+'</div></div></div>' +
         '<div class="buy"><div class="old">'+fmtMoney(f.old*pax)+'</div><div class="now">'+fmtMoney(f.price*pax)+'</div><div class="per">'+pax+' '+esc(t("pax").toLowerCase())+' · '+esc(t("saving",{n:fmtMoney((f.old-f.price)*pax)}))+'</div>' +
-        '<button type="button" data-book-flight="'+f.no+'|'+f.al+'|'+f.dep+'|'+f.arr+'|'+f.price+'">'+esc(t("choose"))+'</button>' +
-        '<button type="button" class="btn-sub-trip" data-trip-flight="'+f.al+'|'+f.no+'">'+esc(t("bookViaTrip"))+'</button></div></div>';
+        '<button type="button" data-book-flight="'+f.no+'|'+f.al+'|'+f.dep+'|'+f.arr+'|'+f.price+'">'+esc(t("choose"))+'</button></div></div>';
     }
     function sortFlights(list, mode){
       var arr = list.slice();
@@ -788,24 +788,23 @@
       $("#bkBody").innerHTML =
         '<div class="summary">'+rows+'<div class="row total"><span>'+esc(t("bkTotal"))+'</span><b>'+fmtMoney(bk.total)+'</b></div></div>' +
         '<form class="mform" id="bkForm">' +
-        '<div class="field"><label>'+esc(t("bkName"))+'</label><input id="bkName" type="text" autocomplete="name" placeholder="NGUYEN VAN A" /></div>' +
-        '<div class="field"><label>'+esc(t("bkEmail"))+'</label><input id="bkEmail" type="email" autocomplete="email" placeholder="email@example.com" /></div>' +
-        '<div class="field"><label>'+esc(t("bkPhone"))+'</label><input id="bkPhone" type="tel" autocomplete="tel" placeholder="0901 234 567" /></div>' +
-        '<button class="btn-primary" type="submit" style="justify-content:center;width:100%">'+esc(t("bkConfirm"))+' · '+fmtMoney(bk.total)+'</button></form>';
+        '<div class="field"><label>'+esc(t("bkName"))+'</label><input id="bkName" type="text" autocomplete="name" placeholder="NGUYEN VAN A" required /></div>' +
+        '<div class="field"><label>'+esc(t("bkEmail"))+'</label><input id="bkEmail" type="email" autocomplete="email" placeholder="email@example.com" required /></div>' +
+        '<div class="field"><label>'+esc(t("bkPhone"))+'</label><input id="bkPhone" type="tel" autocomplete="tel" placeholder="0901 234 567" required /></div>' +
+        '<button class="btn-primary" type="submit" style="justify-content:center;width:100%">'+esc(t("bkConfirm"))+' · '+fmtMoney(bk.total)+'</button>' +
+        '<p style="text-align:center;font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5">'+esc(t("bkTripNote"))+'</p>' +
+        '</form>';
       $("#bookingOverlay").classList.remove("hidden");
       $("#bkForm").addEventListener("submit", function(e){
         e.preventDefault();
         var name = $("#bkName").value.trim(), email = $("#bkEmail").value.trim(), phone = $("#bkPhone").value.trim();
         if (!name || !email || !phone || email.indexOf("@")<0){ toast(t("fillInfo")); return; }
         var code = "BV" + Math.random().toString(36).slice(2,7).toUpperCase();
-        bookings.unshift({code:code, name:name, product:bk.title, route:bk.routeText||"", hotelId:bk.hotelId||0, ticketId:bk.ticketId||0, qty:bk.qty||0, date:bk.date, total:bk.total, status:"paid"});
+        bookings.unshift({code:code, name:name, email:email, phone:phone, product:bk.title, route:bk.routeText||"", hotelId:bk.hotelId||0, ticketId:bk.ticketId||0, qty:bk.qty||0, date:bk.date, total:bk.total, status:"paid"});
         renderAdminAll();
-        $("#bkTitle").textContent = t("bkSuccess");
-        $("#bkSub").textContent = bk.title;
-        $("#bkBody").innerHTML = '<div class="success"><div class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg></div>' +
-          '<div class="pnr">'+code+'</div><p><b>'+esc(t("bkPnrLabel"))+'</b></p><p style="margin-top:8px">'+esc(t("bkSuccessNote"))+'</p>' +
-          '<button class="btn-primary" id="bkDone" type="button" style="justify-content:center;width:100%;margin-top:18px">'+esc(t("bkDone"))+'</button></div>';
-        $("#bkDone").addEventListener("click", closeBooking);
+        closeBooking();
+        toast(t("sendingToTrip"));
+        openTripPortal(bk.kind || "flights", bk.tripUrl);
       });
     }
     function closeBooking(){ $("#bookingOverlay").classList.add("hidden"); }
@@ -858,16 +857,26 @@
           var p = b.getAttribute("data-book-flight").split("|");
           var a = airlineOf(p[1]), pax = lastSearch && lastSearch.pax ? lastSearch.pax : 1;
           var price = parseInt(p[4],10);
+          var fromCode = (lastSearch && lastSearch.from ? lastSearch.from : "SGN").toUpperCase();
+          var toCode = (lastSearch && lastSearch.to ? lastSearch.to : "HAN").toUpperCase();
+          var depDate = lastSearch && lastSearch.date ? lastSearch.date : isoDay(new Date(today.getTime()+7*864e5));
+          var round = $('input[name="trip"]:checked') && $('input[name="trip"]:checked').value === "round";
+          var rdate = $("#fReturn") ? $("#fReturn").value : "";
+          var flightTripUrl = (lastSearch && lastSearch.tripUrl) ? lastSearch.tripUrl : tripLink("https://vn.trip.com/flights/showfarefirst?dcity=" + fromCode.toLowerCase() + "&acity=" + toCode.toLowerCase() + "&ddate=" + depDate + (round && rdate ? "&rdate=" + rdate : "") + "&quantity=" + pax + "&curr=" + currency);
+
           openBooking({
+            kind: "flights",
             title: a.name + " " + p[0],
             rows: [
-              [t("colRoute"), lastSearch.from + " → " + lastSearch.to],
-              [t("depart"), fmtDate(lastSearch.date) + " · " + fmtTime(parseInt(p[2],10)) + " → " + fmtTime(parseInt(p[3],10))],
+              [t("colRoute"), fromCode + " → " + toCode],
+              [t("depart"), fmtDate(depDate) + " · " + fmtTime(parseInt(p[2],10)) + " → " + fmtTime(parseInt(p[3],10))],
               [t("pax"), String(pax)],
               [t("perPerson"), fmtMoney(price)]
             ],
-            total: price * pax, date: lastSearch.date,
-            routeText: lastSearch.from + " → " + lastSearch.to + " · " + p[0]
+            total: price * pax,
+            date: depDate,
+            routeText: fromCode + " → " + toCode + " · " + p[0],
+            tripUrl: flightTripUrl
           });
         });
       });
@@ -879,7 +888,9 @@
           var nights = lastSearch && lastSearch.kind==="hotels" ? lastSearch.nights : 2;
           var rooms = lastSearch && lastSearch.kind==="hotels" ? lastSearch.rooms : 1;
           var date = lastSearch && lastSearch.kind==="hotels" ? lastSearch.date : isoDay(new Date(today.getTime()+7*864e5));
+          var hotelTripUrl = tripLink("https://vn.trip.com/hotels/", { curr: currency });
           openBooking({
+            kind: "hotels",
             title: h.name,
             rows: [
               [t("colHotel"), h.name],
@@ -887,7 +898,8 @@
               [t("nights",{n:nights}), t("roomsGuests",{r:rooms,g:2})],
               [t("perNight"), fmtMoney(h.price)]
             ],
-            total: h.price * nights * rooms, date: date, hotelId: h.id
+            total: h.price * nights * rooms, date: date, hotelId: h.id,
+            tripUrl: hotelTripUrl
           });
         });
       });
@@ -899,7 +911,9 @@
           var qty = lastSearch && lastSearch.kind==="tickets" ? lastSearch.qty : 2;
           var date = lastSearch && lastSearch.kind==="tickets" ? lastSearch.date : isoDay(new Date(today.getTime()+7*864e5));
           var name = lang==="vi" ? x.nameVi : x.nameEn;
+          var ticketTripUrl = x.tripUrl ? tripLink(x.tripUrl) : tripLink("https://vn.trip.com/things-to-do/", { curr: currency });
           openBooking({
+            kind: "tickets",
             title: name,
             rows: [
               [t("colAttraction"), name],
@@ -907,7 +921,8 @@
               [t("ticketQty"), String(qty)],
               [t("perTicket"), fmtMoney(x.price)]
             ],
-            total: x.price * qty, date: date, ticketId: x.id, qty: qty
+            total: x.price * qty, date: date, ticketId: x.id, qty: qty,
+            tripUrl: ticketTripUrl
           });
         });
       });
