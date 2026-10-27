@@ -812,20 +812,6 @@
     $("#bookingOverlay").addEventListener("click", function(e){ if (e.target===this) closeBooking(); });
 
     function bindBookButtons(){
-      $$("[data-trip-flight]").forEach(function(b){
-        if (b.dataset.bound) return; b.dataset.bound = "1";
-        b.addEventListener("click", function(){
-          openTripPortal("flights", lastSearch && lastSearch.tripUrl ? lastSearch.tripUrl : null);
-        });
-      });
-      $$("[data-trip-hotel]").forEach(function(b){
-        if (b.dataset.bound) return; b.dataset.bound = "1";
-        b.addEventListener("click", function(){ openTripPortal("hotels"); });
-      });
-      $$("[data-trip-ticket]").forEach(function(b){
-        if (b.dataset.bound) return; b.dataset.bound = "1";
-        b.addEventListener("click", function(){ openTripPortal("tickets"); });
-      });
       $$("[data-trip-ticket-url]").forEach(function(b){
         if (b.dataset.bound) return; b.dataset.bound = "1";
         b.addEventListener("click", function(e){
