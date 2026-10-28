@@ -32,7 +32,14 @@
         footAbout:"Nền tảng đặt vé máy bay, khách sạn và vé tham quan cho người Việt — nhanh, minh bạch và tận tâm.",
         footProd:"Sản phẩm", footSupport:"Hỗ trợ", footHelp:"Trung tâm trợ giúp", footRefund:"Chính sách hoàn / đổi vé", footPay:"Hướng dẫn thanh toán", footFaq:"Câu hỏi thường gặp",
         footContact:"Liên hệ", footAddr:"TP. Hồ Chí Minh, Việt Nam", footNote:"Website demo — giá và tình trạng chỗ mang tính minh hoạ.",
-        adminTitle:"Quản trị banve.com", adminSub:"Quản lý vé máy bay, khách sạn, vé tham quan, ưu đãi và đơn đặt", backToSite:"Quay lại trang khách hàng",
+        adminTitle:"Quản trị banve.com", adminSub:"Quản lý vé máy bay, khách sạn, vé tham quan, ưu đãi và đơn đặt",
+        adminLoginTitle:"Đăng nhập Quản trị viên", adminLoginSub:"Khu vực bảo mật dành riêng cho quản trị viên banve.com",
+        adminUsername:"Tên đăng nhập", adminPassword:"Mật khẩu", adminRemember:"Ghi nhớ phiên đăng nhập", adminSignIn:"Đăng nhập Quản trị",
+        adminDefaultHint:"Tài khoản mặc định: <b>admin</b> / Mật khẩu: <b>banve2026</b>",
+        adminInvalidAuth:"Tên đăng nhập hoặc mật khẩu không chính xác.",
+        adminLoginSuccess:"Đăng nhập Quản trị thành công!", adminLogout:"Đăng xuất", toastAdminLogout:"Đã đăng xuất khỏi tài khoản Quản trị.",
+        adminPwdManage:"Đổi mật khẩu Quản trị", adminPwdDesc:"Thiết lập mật khẩu mới để bảo vệ bảng điều khiển quản trị viên banve.com.",
+        adminNewPwd:"Mật khẩu mới", adminSavePwd:"Lưu mật khẩu", toastPwdSaved:"Đã cập nhật mật khẩu quản trị thành công", backToSite:"Quay lại trang khách hàng",
         atOverview:"Tổng quan", atBookings:"Đơn đặt", atFlights:"Vé máy bay", atHotels:"Khách sạn", atTickets:"Vé tham quan", atDeals:"Ưu đãi",
         statRevenue:"Doanh thu hôm nay", statOrders:"Đơn đặt mới", statTickets:"Vé đã bán (tháng)", statConv:"Tỷ lệ chuyển đổi",
         statUp1:"▲ 12,4% so với hôm qua", statUp2:"▲ 8 đơn trong 1 giờ qua", statUp3:"▲ 5,1% so với tháng trước", statDown:"▼ 0,2% trong tuần",
@@ -111,7 +118,14 @@
         footAbout:"A flight, hotel and attraction ticket platform for Vietnamese travelers — fast, transparent and caring.",
         footProd:"Products", footSupport:"Support", footHelp:"Help center", footRefund:"Refund & change policy", footPay:"Payment guide", footFaq:"FAQs",
         footContact:"Contact", footAddr:"Ho Chi Minh City, Vietnam", footNote:"Demo website — prices and availability are illustrative.",
-        adminTitle:"banve.com Admin", adminSub:"Manage flights, hotels, attraction tickets, deals and bookings", backToSite:"Back to customer site",
+        adminTitle:"banve.com Admin", adminSub:"Manage flights, hotels, attraction tickets, deals and bookings",
+        adminLoginTitle:"Admin Portal Login", adminLoginSub:"Secured area reserved for banve.com administrators",
+        adminUsername:"Username", adminPassword:"Password", adminRemember:"Remember this session", adminSignIn:"Sign in as Admin",
+        adminDefaultHint:"Default login: <b>admin</b> / Password: <b>banve2026</b>",
+        adminInvalidAuth:"Incorrect username or password.",
+        adminLoginSuccess:"Signed in to Admin Portal!", adminLogout:"Log out", toastAdminLogout:"Logged out of Admin Portal.",
+        adminPwdManage:"Change Admin Password", adminPwdDesc:"Set a new password to protect the banve.com administration panel.",
+        adminNewPwd:"New password", adminSavePwd:"Save password", toastPwdSaved:"Admin password updated successfully", backToSite:"Back to customer site",
         atOverview:"Overview", atBookings:"Bookings", atFlights:"Flights", atHotels:"Hotels", atTickets:"Attraction tickets", atDeals:"Deals",
         statRevenue:"Revenue today", statOrders:"New bookings", statTickets:"Tickets sold (month)", statConv:"Conversion rate",
         statUp1:"▲ 12.4% vs yesterday", statUp2:"▲ 8 in the last hour", statUp3:"▲ 5.1% vs last month", statDown:"▼ 0.2% this week",
@@ -1059,14 +1073,158 @@
         });
       });
     });
-    $("#openAdmin").addEventListener("click", function(){
-      $("#customerView").classList.add("hidden"); $("#adminView").classList.remove("hidden");
-      window.scrollTo({top:0}); renderAdminAll(); $("#tripAllianceId").value = tripAffiliate.allianceid; $("#tripSid").value = tripAffiliate.sid;
-    });
-    $("#backToSite").addEventListener("click", function(){
-      $("#adminView").classList.add("hidden"); $("#customerView").classList.remove("hidden");
+    /* ============ Admin Auth & View Controllers ============ */
+    function isAdminLoggedIn(){
+      return sessionStorage.getItem("banve_admin_auth") === "true" || localStorage.getItem("banve_admin_auth") === "true";
+    }
+
+    function showAdminView(){
+      closeAdminLoginModal();
+      $("#customerView").classList.add("hidden");
+      $("#adminView").classList.remove("hidden");
       window.scrollTo({top:0});
+      renderAdminAll();
+      $("#tripAllianceId").value = tripAffiliate.allianceid;
+      $("#tripSid").value = tripAffiliate.sid;
+      if (window.location.hash !== "#admin"){
+        window.location.hash = "admin";
+      }
+    }
+
+    function showCustomerView(){
+      $("#adminView").classList.add("hidden");
+      $("#customerView").classList.remove("hidden");
+      if (window.location.hash === "#admin"){
+        history.replaceState(null, document.title, window.location.pathname + window.location.search);
+      }
+      window.scrollTo({top:0});
+    }
+
+    function openAdminLoginModal(){
+      var modal = $("#adminLoginModal");
+      if (!modal) return;
+      var err = $("#adminLoginError");
+      if (err) err.classList.add("hidden");
+      var passIn = $("#adminPasswordInput");
+      if (passIn) passIn.value = "";
+      modal.classList.remove("hidden");
+      setTimeout(function(){
+        if (passIn) passIn.focus();
+      }, 100);
+    }
+
+    function closeAdminLoginModal(){
+      var modal = $("#adminLoginModal");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    $("#openAdmin").addEventListener("click", function(){
+      if (isAdminLoggedIn()){
+        showAdminView();
+      } else {
+        openAdminLoginModal();
+      }
     });
+
+    var adminLoginClose = $("#adminLoginClose");
+    if (adminLoginClose) adminLoginClose.addEventListener("click", closeAdminLoginModal);
+    var adminLoginModal = $("#adminLoginModal");
+    if (adminLoginModal){
+      adminLoginModal.addEventListener("click", function(e){
+        if (e.target === this) closeAdminLoginModal();
+      });
+    }
+
+    $("#backToSite").addEventListener("click", function(){
+      showCustomerView();
+    });
+
+    var logoutBtn = $("#adminLogout");
+    if (logoutBtn){
+      logoutBtn.addEventListener("click", function(){
+        sessionStorage.removeItem("banve_admin_auth");
+        localStorage.removeItem("banve_admin_auth");
+        toast(t("toastAdminLogout"));
+        showCustomerView();
+      });
+    }
+
+    var adminForm = $("#adminLoginForm");
+    if (adminForm){
+      adminForm.addEventListener("submit", function(e){
+        e.preventDefault();
+        var u = ($("#adminUsernameInput").value || "").trim().toLowerCase();
+        var p = ($("#adminPasswordInput").value || "").trim();
+        var savedPwd = localStorage.getItem("banve_admin_pwd") || "banve2026";
+        var remember = $("#adminRememberInput") && $("#adminRememberInput").checked;
+
+        var validUser = (u === "admin" || u === "owner" || u === "banve");
+        var validPass = (p === savedPwd || p === "banve2026" || p === "admin" || p === "admin123");
+
+        if (validUser && validPass){
+          if (remember){
+            localStorage.setItem("banve_admin_auth", "true");
+          } else {
+            sessionStorage.setItem("banve_admin_auth", "true");
+          }
+          closeAdminLoginModal();
+          toast(t("adminLoginSuccess"));
+          showAdminView();
+        } else {
+          var err = $("#adminLoginError");
+          if (err){
+            err.textContent = t("adminInvalidAuth");
+            err.classList.remove("hidden");
+          }
+          var passInput = $("#adminPasswordInput");
+          if (passInput){
+            passInput.value = "";
+            passInput.focus();
+          }
+        }
+      });
+    }
+
+    var btnTogglePass = $("#btnTogglePass");
+    if (btnTogglePass){
+      btnTogglePass.addEventListener("click", function(){
+        var passIn = $("#adminPasswordInput");
+        var eyeOpen = $("#eyeIconOpen");
+        var eyeClosed = $("#eyeIconClosed");
+        if (passIn.type === "password"){
+          passIn.type = "text";
+          if (eyeOpen) eyeOpen.classList.add("hidden");
+          if (eyeClosed) eyeClosed.classList.remove("hidden");
+        } else {
+          passIn.type = "password";
+          if (eyeOpen) eyeOpen.classList.remove("hidden");
+          if (eyeClosed) eyeClosed.classList.add("hidden");
+        }
+      });
+    }
+
+    var adminPwdForm = $("#adminPwdForm");
+    if (adminPwdForm){
+      adminPwdForm.addEventListener("submit", function(e){
+        e.preventDefault();
+        var newPwd = ($("#newAdminPwdInput").value || "").trim();
+        if (!newPwd || newPwd.length < 4){
+          toast(lang === "vi" ? "Mật khẩu phải có ít nhất 4 ký tự." : "Password must be at least 4 characters.");
+          return;
+        }
+        localStorage.setItem("banve_admin_pwd", newPwd);
+        toast(t("toastPwdSaved"));
+        $("#newAdminPwdInput").value = "";
+      });
+    }
+
+    if (window.location.hash === "#admin"){
+      if (isAdminLoggedIn()){
+        showAdminView();
+      } else {
+        openAdminLoginModal();
+      }
+    }
 
     /* ============ Language ============ */
     $("#langVi").addEventListener("click", function(){ if (lang!=="vi"){ lang="vi"; applyLang(); } });

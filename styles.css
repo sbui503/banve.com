@@ -214,8 +214,30 @@
       .admin-top .row{display:flex;align-items:center;gap:16px;padding:16px 0;flex-wrap:wrap}
       .admin-top h2{margin:0;font-size:20px;font-weight:800}
       .admin-top p{margin:2px 0 0;font-size:13px;color:#bcd2f7}
-      .back-btn{margin-left:auto;background:#fff;color:var(--brand-deep);border:0;border-radius:10px;padding:10px 18px;font-weight:800;display:flex;gap:8px;align-items:center}
+      .admin-top-actions{display:flex;align-items:center;gap:10px;margin-left:auto}
+      .back-btn{background:#fff;color:var(--brand-deep);border:0;border-radius:10px;padding:10px 18px;font-weight:800;display:flex;gap:8px;align-items:center;cursor:pointer}
       .back-btn svg{width:16px;height:16px}
+      .logout-btn{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:10px;padding:10px 16px;font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:7px;cursor:pointer;transition:all .15s}
+      .logout-btn:hover{background:rgba(239,68,68,.85);border-color:rgba(239,68,68,1)}
+
+      /* Admin Login Modal */
+      .admin-login-modal{max-width:440px}
+      .admin-login-head{display:flex;align-items:center;gap:14px}
+      .admin-lock-icon{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#0b5bd3,#1a73e8);color:#fff;display:grid;place-items:center;flex:none}
+      .admin-lock-icon svg{width:22px;height:22px}
+      .login-alert{padding:10px 14px;background:#fee2e2;border:1px solid #fca5a5;color:#b91c1c;border-radius:var(--r-sm);font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px}
+      @media (prefers-color-scheme: dark){.login-alert{background:#450a0a;border-color:#7f1d1d;color:#fca5a5}}
+      .pass-input-wrap{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:var(--r-sm);background:var(--surface);overflow:hidden;position:relative}
+      .pass-input-wrap:focus-within{outline:2px solid var(--brand);outline-offset:0;border-color:var(--brand)}
+      .pass-input-wrap input{border:0!important;outline:none!important;border-radius:0!important;padding:11px 12px!important;background:transparent!important;font-weight:600;font-size:14.5px;flex:1;width:100%}
+      .btn-toggle-pass{background:transparent;border:0;color:var(--muted);padding:8px 12px;cursor:pointer;display:grid;place-items:center;transition:color .2s}
+      .btn-toggle-pass:hover{color:var(--ink)}
+      .login-options{display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--muted);margin:2px 0}
+      .remember-label{display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;font-weight:600}
+      .remember-label input{accent-color:var(--brand)}
+      .admin-hint-box{margin-top:14px;padding:10px 12px;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-sm);font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px;line-height:1.4}
+      .admin-hint-box b{color:var(--ink)}
+      .admin-hint-box svg{flex:none;stroke:var(--brand)}
       .admin-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 18px}
       .admin-tabs button{border:1.5px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:9px 18px;font-weight:700;font-size:14px}
       .admin-tabs button.on{background:var(--brand);border-color:var(--brand);color:#fff}
