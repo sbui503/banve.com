@@ -52,6 +52,8 @@
         bkTitle:"Xác nhận đặt chỗ", bkPassenger:"Họ tên hành khách", bkName:"Họ và tên", bkContact:"Thông tin liên hệ", bkEmail:"Email nhận vé", bkPhone:"Số điện thoại (Mỹ / US)",
         invalidPhone:"Vui lòng nhập số điện thoại hợp lệ tại Mỹ (10 chữ số, VD: (555) 234-5678).",
         bkTotal:"Tổng thanh toán", bkConfirm:"Xác nhận & thanh toán", bkSuccess:"Đặt chỗ thành công!",
+        bkSuccessDirectNote:"Hệ thống đã kết nối và mở trang đặt vé chính thức trên Trip.com trong tab mới để bạn hoàn tất thanh toán & xuất vé.",
+        continueToTrip:"Tiếp tục đến Trip.com",
         bkPnrLabel:"Mã đặt chỗ của bạn", bkSuccessNote:"Vé điện tử đã được gửi tới email của bạn. Vui lòng mang theo mã đặt chỗ khi làm thủ tục.",
         bkDone:"Hoàn tất",
         bkTripNote:"Sau khi bấm xác nhận, hệ thống sẽ mở cổng dịch vụ Trip.com để hoàn tất xuất vé & thanh toán bảo mật.",
@@ -129,6 +131,8 @@
         bkTitle:"Confirm booking", bkPassenger:"Passenger name", bkName:"Full name", bkContact:"Contact details", bkEmail:"Email for e-ticket", bkPhone:"Phone number (US)",
         invalidPhone:"Please enter a valid US phone number (10 digits, e.g. (555) 234-5678).",
         bkTotal:"Total to pay", bkConfirm:"Confirm & pay", bkSuccess:"Booking successful!",
+        bkSuccessDirectNote:"We have opened the official Trip.com booking page in a new tab for you to complete payment & ticketing.",
+        continueToTrip:"Continue to Trip.com",
         bkPnrLabel:"Your booking code", bkSuccessNote:"Your e-ticket has been sent to your email. Please bring the booking code when you check in.",
         bkDone:"Done",
         bkTripNote:"After confirming, you will be directed to the secure Trip.com portal to complete ticketing & payment.",
@@ -350,32 +354,12 @@
         hotels: "https://vn.trip.com/hotels/",
         tickets: "https://vn.trip.com/things-to-do/"
       };
-      var titles = {
-        flights: t("tripModalTitleFlights"),
-        hotels: t("tripModalTitleHotels"),
-        tickets: t("tripModalTitleTickets")
-      };
       var targetUrl = customUrl || tripLink(baseUrls[type] || baseUrls.flights, {
         locale: lang === "vi" ? "vi-VN" : "en-US",
         curr: currency
       });
-      var modal = $("#tripModal");
-      var iframe = $("#tripFlightIframe");
-      var loading = $("#tripIframeLoading");
-      var titleEl = $("#tripModalTitle");
-      if (titleEl) titleEl.textContent = titles[type] || titles.flights;
-      if (iframe){
-        if (loading) loading.style.display = "flex";
-        iframe.src = targetUrl;
-        iframe.onload = function(){
-          if (loading) loading.style.display = "none";
-        };
-      }
-      if ($("#tripDirectLink")) $("#tripDirectLink").href = targetUrl;
-      if ($("#tripFallbackLink")) $("#tripFallbackLink").href = targetUrl;
-      if ($("#tripCookieDirectBtn")) $("#tripCookieDirectBtn").href = targetUrl;
-      if (modal) modal.classList.remove("hidden");
-      document.body.style.overflow = "hidden";
+      window.open(targetUrl, "_blank");
+      toast(lang === "vi" ? "Đang mở Trip.com trong tab mới..." : "Opening Trip.com in a new tab...");
     }
     function openTripFlightsModal(customUrl){ openTripPortal("flights", customUrl); }
     function openTripHotelsModal(customUrl){ openTripPortal("hotels", customUrl); }
@@ -747,8 +731,7 @@
         var fromObj = cityByCode(from), toObj = cityByCode(to);
         var fromName = cityName(fromObj), toName = cityName(toObj);
 
-        var bannerHtml = '<div class="trip-search-banner"><div class="t-text"><strong>Tìm tất cả chuyến bay ' + esc(fromName) + ' (' + from + ') → ' + esc(toName) + ' (' + to + ') trên Trip.com</strong><p>So sánh giá vé trực tiếp từ 5.000+ hãng hàng không toàn cầu với giá đối tác tốt nhất.</p></div><button type="button" class="btn-trip-banner" id="bannerTripFlightBtn">Đặt vé ' + from + ' → ' + to + ' trên Trip.com ↗</button></div>';
-        listEl.innerHTML = bannerHtml + lastResults.map(function(f){ return flightCard(f, pax); }).join("");
+        listEl.innerHTML = lastResults.map(function(f){ return flightCard(f, pax); }).join("");
         showResults(t("resultsFlights",{from:fromName, to:toName}), fmtDate(date) + " · " + t("foundN",{n:lastResults.length}));
       } else if (kind==="hotels"){
         var city = $("#hCity").value, ci = $("#hIn").value, co = $("#hOut").value;
@@ -759,8 +742,7 @@
         if (!found.length) found = hotels.filter(function(h){ return h.on; });
         lastResults = found;
         $("#sortSel").disabled = true;
-        var hotelBannerHtml = '<div class="trip-search-banner"><div class="t-text"><strong data-i18n="tripSearchBannerHotels">'+esc(t("tripSearchBannerHotels"))+'</strong><p data-i18n="tripSearchBannerHotelsSub">'+esc(t("tripSearchBannerHotelsSub"))+'</p></div><button type="button" class="btn-trip-banner" id="bannerTripHotelBtn" data-i18n="openTripHotelPortal">'+esc(t("openTripHotelPortal"))+'</button></div>';
-        listEl.innerHTML = hotelBannerHtml + found.map(hotelCard).join("");
+        listEl.innerHTML = found.map(hotelCard).join("");
         showResults(t("resultsHotels",{city:cityName(cityByCode(city))}), fmtDate(ci) + " · " + t("nights",{n:nights}) + " · " + t("roomsGuests",{r:rooms,g:guests}) + " · " + t("foundN",{n:found.length}));
       } else if (kind==="tickets"){
         var sel = $("#tPlace").value, date2 = $("#tDate").value, qty = parseInt($("#tQty").value,10);
@@ -768,8 +750,7 @@
         var found2 = tickets.filter(function(x){ return x.on && (sel==="all" || x.id===parseInt(sel,10)); });
         lastResults = found2;
         $("#sortSel").disabled = true;
-        var ticketBannerHtml = '<div class="trip-search-banner"><div class="t-text"><strong data-i18n="tripSearchBannerTickets">'+esc(t("tripSearchBannerTickets"))+'</strong><p data-i18n="tripSearchBannerTicketsSub">'+esc(t("tripSearchBannerTicketsSub"))+'</p></div><button type="button" class="btn-trip-banner" id="bannerTripTicketBtn" data-i18n="openTripTicketPortal">'+esc(t("openTripTicketPortal"))+'</button></div>';
-        listEl.innerHTML = ticketBannerHtml + found2.map(ticketCard).join("");
+        listEl.innerHTML = found2.map(ticketCard).join("");
         showResults(t("resultsTickets"), fmtDate(date2) + " · " + t("ticketsQty",{n:qty}) + " · " + t("foundN",{n:found2.length}));
       }
       bindBookButtons();
@@ -833,9 +814,22 @@
         var code = "BV" + Math.random().toString(36).slice(2,7).toUpperCase();
         bookings.unshift({code:code, name:name, email:email, phone:phone, product:bk.title, route:bk.routeText||"", hotelId:bk.hotelId||0, ticketId:bk.ticketId||0, qty:bk.qty||0, date:bk.date, total:bk.total, status:"paid"});
         renderAdminAll();
-        closeBooking();
-        toast(t("sendingToTrip"));
-        openTripPortal(bk.kind || "flights", bk.tripUrl);
+
+        // 1. Open Trip.com directly in a new top-level tab (bypasses iframe cookie and captcha loops)
+        window.open(bk.tripUrl, "_blank");
+
+        // 2. Display the clear booking confirmation in the modal with PNR and a direct link to re-open if needed
+        $("#bkTitle").textContent = t("bkSuccess");
+        $("#bkSub").textContent = bk.title;
+        $("#bkBody").innerHTML =
+          '<div class="success"><div class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg></div>' +
+          '<div class="pnr">'+code+'</div>' +
+          '<p><b>'+esc(t("bkPnrLabel"))+'</b></p>' +
+          '<p style="margin:10px 0 16px;line-height:1.5">'+esc(t("bkSuccessDirectNote"))+'</p>' +
+          '<a class="btn-primary" href="'+esc(bk.tripUrl)+'" target="_blank" rel="noopener sponsored" style="justify-content:center;width:100%;text-decoration:none;margin-bottom:10px">'+esc(t("continueToTrip"))+' ↗</a>' +
+          '<button class="btn-ghost-sm" id="bkDone" type="button" style="justify-content:center;width:100%">'+esc(t("bkDone"))+'</button>' +
+          '</div>';
+        $("#bkDone").addEventListener("click", closeBooking);
       });
     }
     function closeBooking(){ $("#bookingOverlay").classList.add("hidden"); }
@@ -851,23 +845,7 @@
           openTripPortal("tickets", u);
         });
       });
-      var bannerFlight = $("#bannerTripFlightBtn");
-      if (bannerFlight && !bannerFlight.dataset.bound){
-        bannerFlight.dataset.bound = "1";
-        bannerFlight.addEventListener("click", function(){
-          openTripPortal("flights", lastSearch && lastSearch.tripUrl ? lastSearch.tripUrl : null);
-        });
-      }
-      var bannerHotel = $("#bannerTripHotelBtn");
-      if (bannerHotel && !bannerHotel.dataset.bound){
-        bannerHotel.dataset.bound = "1";
-        bannerHotel.addEventListener("click", function(){ openTripPortal("hotels"); });
-      }
-      var bannerTicket = $("#bannerTripTicketBtn");
-      if (bannerTicket && !bannerTicket.dataset.bound){
-        bannerTicket.dataset.bound = "1";
-        bannerTicket.addEventListener("click", function(){ openTripPortal("tickets"); });
-      }
+
       $$("[data-book-flight]").forEach(function(b){
         if (b.dataset.bound) return; b.dataset.bound = "1";
         b.addEventListener("click", function(){
