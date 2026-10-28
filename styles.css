@@ -197,6 +197,10 @@
       .summary .row.total{border-top:1px dashed var(--line);padding-top:9px;font-weight:800}
       .summary .row.total b{color:var(--accent);font-size:17px}
       .mform{display:grid;gap:12px}
+      .phone-input-wrap{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:var(--r-sm);background:var(--surface);overflow:hidden;transition:border-color .2s}
+      .phone-input-wrap:focus-within{outline:2px solid var(--brand);outline-offset:0;border-color:var(--brand)}
+      .phone-flag{display:inline-flex;align-items:center;gap:4px;padding:0 12px;background:var(--surface-2);color:var(--ink);font-weight:700;font-size:13px;border-right:1.5px solid var(--line);flex:none;height:44px;user-select:none}
+      .phone-input-wrap input{border:0!important;outline:0!important;border-radius:0!important;padding:11px 12px!important;background:transparent!important;font-weight:600;font-size:14.5px;flex:1;width:100%}
       .success{text-align:center;padding:8px 0 4px}
       .success .tick{width:66px;height:66px;border-radius:50%;background:#e7f6ef;color:var(--ok);display:grid;place-items:center;margin:0 auto 14px}
       @media (prefers-color-scheme: dark){.success .tick{background:#0d2f23}}

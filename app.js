@@ -49,7 +49,8 @@
         direct:"Bay thẳng", seatsLeft:"chỗ", onlySeats:"Chỉ còn {n} chỗ", useCode:"Dùng mã", copied:"Đã sao chép mã {code}",
         resultsFlights:"Chuyến bay {from} → {to}", resultsHotels:"Khách sạn tại {city}", resultsTickets:"Vé tham quan",
         foundN:"Tìm thấy {n} kết quả", nights:"{n} đêm", roomsGuests:"{r} phòng · {g} khách", ticketsQty:"{n} vé",
-        bkTitle:"Xác nhận đặt chỗ", bkPassenger:"Họ tên hành khách", bkName:"Họ và tên", bkContact:"Thông tin liên hệ", bkEmail:"Email nhận vé", bkPhone:"Số điện thoại",
+        bkTitle:"Xác nhận đặt chỗ", bkPassenger:"Họ tên hành khách", bkName:"Họ và tên", bkContact:"Thông tin liên hệ", bkEmail:"Email nhận vé", bkPhone:"Số điện thoại (Mỹ / US)",
+        invalidPhone:"Vui lòng nhập số điện thoại hợp lệ tại Mỹ (10 chữ số, VD: (555) 234-5678).",
         bkTotal:"Tổng thanh toán", bkConfirm:"Xác nhận & thanh toán", bkSuccess:"Đặt chỗ thành công!",
         bkPnrLabel:"Mã đặt chỗ của bạn", bkSuccessNote:"Vé điện tử đã được gửi tới email của bạn. Vui lòng mang theo mã đặt chỗ khi làm thủ tục.",
         bkDone:"Hoàn tất",
@@ -125,7 +126,8 @@
         direct:"Non-stop", seatsLeft:"seats", onlySeats:"Only {n} left", useCode:"Use code", copied:"Copied code {code}",
         resultsFlights:"Flights {from} → {to}", resultsHotels:"Hotels in {city}", resultsTickets:"Attraction tickets",
         foundN:"{n} results found", nights:"{n} night(s)", roomsGuests:"{r} room(s) · {g} guest(s)", ticketsQty:"{n} ticket(s)",
-        bkTitle:"Confirm booking", bkPassenger:"Passenger name", bkName:"Full name", bkContact:"Contact details", bkEmail:"Email for e-ticket", bkPhone:"Phone number",
+        bkTitle:"Confirm booking", bkPassenger:"Passenger name", bkName:"Full name", bkContact:"Contact details", bkEmail:"Email for e-ticket", bkPhone:"Phone number (US)",
+        invalidPhone:"Please enter a valid US phone number (10 digits, e.g. (555) 234-5678).",
         bkTotal:"Total to pay", bkConfirm:"Confirm & pay", bkSuccess:"Booking successful!",
         bkPnrLabel:"Your booking code", bkSuccessNote:"Your e-ticket has been sent to your email. Please bring the booking code when you check in.",
         bkDone:"Done",
@@ -778,6 +780,17 @@
     $("#pane-tickets").addEventListener("submit", function(e){ e.preventDefault(); runSearch("tickets"); });
     $("#sortSel").addEventListener("change", function(){ if (lastSearch && lastSearch.kind==="flights") runSearch("flights", true); });
 
+    /* ============ US Phone Formatter ============ */
+    function formatUSPhone(val){
+      var digits = String(val || "").replace(/\D/g, "");
+      if (digits.length > 10 && digits[0] === "1") digits = digits.slice(1);
+      digits = digits.slice(0, 10);
+      if (!digits) return "";
+      if (digits.length <= 3) return "(" + digits;
+      if (digits.length <= 6) return "(" + digits.slice(0, 3) + ") " + digits.slice(3);
+      return "(" + digits.slice(0, 3) + ") " + digits.slice(3, 6) + "-" + digits.slice(6);
+    }
+
     /* ============ Booking ============ */
     var pendingBooking = null;
     function openBooking(bk){
@@ -790,15 +803,33 @@
         '<form class="mform" id="bkForm">' +
         '<div class="field"><label>'+esc(t("bkName"))+'</label><input id="bkName" type="text" autocomplete="name" placeholder="NGUYEN VAN A" required /></div>' +
         '<div class="field"><label>'+esc(t("bkEmail"))+'</label><input id="bkEmail" type="email" autocomplete="email" placeholder="email@example.com" required /></div>' +
-        '<div class="field"><label>'+esc(t("bkPhone"))+'</label><input id="bkPhone" type="tel" autocomplete="tel" placeholder="0901 234 567" required /></div>' +
+        '<div class="field"><label>'+esc(t("bkPhone"))+'</label>' +
+          '<div class="phone-input-wrap">' +
+            '<span class="phone-flag" title="United States (+1)">🇺🇸 +1</span>' +
+            '<input id="bkPhone" type="tel" autocomplete="tel" placeholder="(555) 234-5678" maxlength="14" required />' +
+          '</div>' +
+        '</div>' +
         '<button class="btn-primary" type="submit" style="justify-content:center;width:100%">'+esc(t("bkConfirm"))+' · '+fmtMoney(bk.total)+'</button>' +
         '<p style="text-align:center;font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5">'+esc(t("bkTripNote"))+'</p>' +
         '</form>';
+
+      var phoneInput = $("#bkPhone");
+      if (phoneInput){
+        phoneInput.addEventListener("input", function(){
+          phoneInput.value = formatUSPhone(phoneInput.value);
+        });
+      }
+
       $("#bookingOverlay").classList.remove("hidden");
       $("#bkForm").addEventListener("submit", function(e){
         e.preventDefault();
-        var name = $("#bkName").value.trim(), email = $("#bkEmail").value.trim(), phone = $("#bkPhone").value.trim();
-        if (!name || !email || !phone || email.indexOf("@")<0){ toast(t("fillInfo")); return; }
+        var name = $("#bkName").value.trim(), email = $("#bkEmail").value.trim(), rawPhone = $("#bkPhone").value.trim();
+        var phoneDigits = rawPhone.replace(/\D/g, "");
+        if (phoneDigits.length === 11 && phoneDigits[0] === "1") phoneDigits = phoneDigits.slice(1);
+        if (!name || !email || !rawPhone || email.indexOf("@")<0){ toast(t("fillInfo")); return; }
+        if (phoneDigits.length < 10){ toast(t("invalidPhone")); return; }
+
+        var phone = "+1 " + formatUSPhone(rawPhone);
         var code = "BV" + Math.random().toString(36).slice(2,7).toUpperCase();
         bookings.unshift({code:code, name:name, email:email, phone:phone, product:bk.title, route:bk.routeText||"", hotelId:bk.hotelId||0, ticketId:bk.ticketId||0, qty:bk.qty||0, date:bk.date, total:bk.total, status:"paid"});
         renderAdminAll();
