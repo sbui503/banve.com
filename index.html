@@ -47,10 +47,6 @@
             <button id="langVi" class="on" type="button">VI</button>
             <button id="langEn" type="button">EN</button>
           </div>
-          <button class="admin-btn" id="openAdmin" type="button">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-            <span class="lbl" data-i18n="admin">Quản trị</span>
-          </button>
         </div>
       </div>
     </header>
@@ -304,137 +300,6 @@
     </footer>
   </div>
 
-  <!-- ================= ADMIN VIEW ================= -->
-  <div id="adminView" class="hidden">
-    <div class="admin-top">
-      <div class="wrap row">
-        <div>
-          <h2 data-i18n="adminTitle">Quản trị banve.com</h2>
-          <p data-i18n="adminSub">Quản lý vé máy bay, khách sạn, vé tham quan, ưu đãi và đơn đặt</p>
-        </div>
-        <div class="admin-top-actions">
-          <button class="back-btn" id="backToSite" type="button">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M19 12H5m6-7-7 7 7 7"/></svg>
-            <span data-i18n="backToSite">Quay lại trang khách hàng</span>
-          </button>
-          <button class="logout-btn" id="adminLogout" type="button" title="Đăng xuất khỏi hệ thống quản trị">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="16" height="16"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-            <span data-i18n="adminLogout">Đăng xuất</span>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="wrap">
-      <div class="admin-tabs" id="adminTabs">
-        <button type="button" class="on" data-atab="overview" data-i18n="atOverview">Tổng quan</button>
-        <button type="button" data-atab="bookings" data-i18n="atBookings">Đơn đặt</button>
-        <button type="button" data-atab="flights" data-i18n="atFlights">Vé máy bay</button>
-        <button type="button" data-atab="hotels" data-i18n="atHotels">Khách sạn</button>
-        <button type="button" data-atab="tickets" data-i18n="atTickets">Vé tham quan</button>
-        <button type="button" data-atab="deals" data-i18n="atDeals">Ưu đãi</button>
-        <button type="button" data-atab="trip" data-i18n="atTrip">Trip.com</button>
-      </div>
-
-      <div id="atab-overview">
-        <div class="stat-grid">
-          <div class="stat"><small data-i18n="statRevenue">Doanh thu hôm nay</small><b id="statRevenue">—</b><span class="up" data-i18n="statUp1">▲ 12,4% so với hôm qua</span></div>
-          <div class="stat"><small data-i18n="statOrders">Đơn đặt mới</small><b id="statOrders">—</b><span class="up" data-i18n="statUp2">▲ 8 đơn trong 1 giờ qua</span></div>
-          <div class="stat"><small data-i18n="statTickets">Vé đã bán (tháng)</small><b id="statTickets">—</b><span class="up" data-i18n="statUp3">▲ 5,1% so với tháng trước</span></div>
-          <div class="stat"><small data-i18n="statConv">Tỷ lệ chuyển đổi</small><b>3,8%</b><span class="down" data-i18n="statDown">▼ 0,2% trong tuần</span></div>
-        </div>
-        <div class="panel">
-          <div class="phead"><h3 data-i18n="recentBookings">Đơn đặt gần đây</h3></div>
-          <div class="tbl-wrap"><table>
-            <thead><tr><th data-i18n="colCode">Mã đơn</th><th data-i18n="colCustomer">Khách hàng</th><th data-i18n="colProduct">Sản phẩm</th><th data-i18n="colDate">Ngày khởi hành</th><th data-i18n="colTotal">Tổng tiền</th><th data-i18n="colStatus">Trạng thái</th></tr></thead>
-            <tbody id="recentBody"></tbody>
-          </table></div>
-        </div>
-      </div>
-
-      <div id="atab-bookings" class="hidden">
-        <div class="panel">
-          <div class="phead"><h3 data-i18n="allBookings">Tất cả đơn đặt</h3></div>
-          <div class="tbl-wrap"><table>
-            <thead><tr><th data-i18n="colCode">Mã đơn</th><th data-i18n="colCustomer">Khách hàng</th><th data-i18n="colProduct">Sản phẩm</th><th data-i18n="colDate">Ngày khởi hành</th><th data-i18n="colTotal">Tổng tiền</th><th data-i18n="colStatus">Trạng thái</th><th data-i18n="colAction">Thao tác</th></tr></thead>
-            <tbody id="bookingsBody"></tbody>
-          </table></div>
-        </div>
-      </div>
-
-      <div id="atab-flights" class="hidden">
-        <div class="panel">
-          <div class="phead"><h3 data-i18n="flightPrices">Bảng giá tuyến bay</h3><span style="color:var(--muted);font-size:13px" data-i18n="editHint">Sửa giá trực tiếp — thay đổi áp dụng ngay cho trang khách hàng</span></div>
-          <div class="tbl-wrap"><table>
-            <thead><tr><th data-i18n="colRoute">Tuyến</th><th data-i18n="colAirline">Hãng</th><th data-i18n="colSeats">Ghế còn</th><th data-i18n="colPrice">Giá (USD)</th><th data-i18n="colStatus">Trạng thái</th><th data-i18n="colAction">Thao tác</th></tr></thead>
-            <tbody id="adminFlightsBody"></tbody>
-          </table></div>
-        </div>
-      </div>
-
-      <div id="atab-hotels" class="hidden">
-        <div class="panel">
-          <div class="phead"><h3 data-i18n="hotelManage">Quản lý khách sạn</h3></div>
-          <div class="tbl-wrap"><table>
-            <thead><tr><th data-i18n="colHotel">Khách sạn</th><th data-i18n="colCity">Thành phố</th><th data-i18n="colPriceNight">Giá / đêm (USD)</th><th data-i18n="colStatus">Trạng thái</th><th data-i18n="colAction">Thao tác</th></tr></thead>
-            <tbody id="adminHotelsBody"></tbody>
-          </table></div>
-        </div>
-      </div>
-
-      <div id="atab-tickets" class="hidden">
-        <div class="panel">
-          <div class="phead"><h3 data-i18n="ticketManage">Quản lý vé tham quan</h3></div>
-          <div class="tbl-wrap"><table>
-            <thead><tr><th data-i18n="colAttraction">Điểm tham quan</th><th data-i18n="colCity">Thành phố</th><th data-i18n="colPrice">Giá (USD)</th><th data-i18n="colStatus">Trạng thái</th><th data-i18n="colAction">Thao tác</th></tr></thead>
-            <tbody id="adminTicketsBody"></tbody>
-          </table></div>
-        </div>
-      </div>
-
-      <div id="atab-deals" class="hidden">
-        <div class="panel">
-          <div class="phead"><h3 data-i18n="dealManage">Quản lý ưu đãi</h3>
-            <button class="btn-ghost" id="addDealBtn" type="button" data-i18n="addDeal">+ Thêm ưu đãi</button>
-          </div>
-          <div class="tbl-wrap"><table>
-            <thead><tr><th data-i18n="colCode2">Mã ưu đãi</th><th data-i18n="colDesc">Mô tả</th><th data-i18n="colExpiry">Hạn dùng</th><th data-i18n="colStatus">Trạng thái</th><th data-i18n="colAction">Thao tác</th></tr></thead>
-            <tbody id="adminDealsBody"></tbody>
-          </table></div>
-        </div>
-      </div>
-
-      <div id="atab-trip" class="hidden">
-        <div class="panel">
-          <div class="phead"><h3 data-i18n="tripTitle">Đối tác Trip.com</h3></div>
-          <p style="color:var(--muted);font-size:14px;margin-bottom:16px;line-height:1.6" data-i18n="tripNote">Nhập Alliance ID và SID từ tài khoản đối tác Trip.com (connect.trip.com). Có thể để trống và điền sau — khi chưa lưu SID, các nút đặt vé California sẽ mở trang Trip.com mà không kèm thông số theo dõi.</p>
-          <form id="tripForm" class="mform" style="max-width:480px">
-            <div class="field"><label data-i18n="tripAlliance">Alliance ID</label><input id="tripAllianceId" type="text" placeholder="11053323" /></div>
-            <div class="field"><label>SID</label><input id="tripSid" type="text" placeholder="333749550" /></div>
-            <div style="display:flex;gap:10px;align-items:center;margin-top:6px;flex-wrap:wrap">
-              <button class="btn-primary" type="submit" data-i18n="tripSave">Lưu cài đặt</button>
-              <button class="btn-ghost" id="adminPreviewTripFlightBtn" type="button" data-i18n="previewTripFlight">Xem trước Vé máy bay</button>
-              <button class="btn-ghost" id="adminPreviewTripHotelBtn" type="button" data-i18n="previewTripHotel">Xem trước Khách sạn</button>
-              <button class="btn-ghost" id="adminPreviewTripTicketBtn" type="button" data-i18n="previewTripTicket">Xem trước Vé tham quan</button>
-            </div>
-          </form>
-        </div>
-        <div class="panel" style="margin-top:20px">
-          <div class="phead"><h3 data-i18n="adminPwdManage">Đổi mật khẩu Quản trị</h3></div>
-          <p style="color:var(--muted);font-size:14px;margin-bottom:16px;line-height:1.6" data-i18n="adminPwdDesc">Thiết lập mật khẩu mới để bảo vệ bảng điều khiển quản trị viên banve.com.</p>
-          <form id="adminPwdForm" class="mform" style="max-width:480px">
-            <div class="field">
-              <label data-i18n="adminNewPwd">Mật khẩu mới</label>
-              <input id="newAdminPwdInput" type="password" placeholder="Nhập mật khẩu mới..." required />
-            </div>
-            <div>
-              <button class="btn-primary" type="submit" data-i18n="adminSavePwd">Lưu mật khẩu</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Trip.com Service Booking Iframe Modal -->
   <div class="overlay hidden" id="tripModal">
     <div class="modal modal-iframe" role="dialog" aria-modal="true" aria-labelledby="tripModalTitle">
@@ -475,56 +340,6 @@
           <span data-i18n="tripIframeFallback">Nếu giao diện không tải do thiết lập bảo mật của trình duyệt, vui lòng</span>
           <a id="tripFallbackLink" href="https://vn.trip.com/flights/" target="_blank" rel="noopener sponsored" data-i18n="tripIframeClickHere">Bấm vào đây để mở trực tiếp trên Trip.com ↗</a>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Admin Login Modal -->
-  <div class="overlay hidden" id="adminLoginModal">
-    <div class="modal admin-login-modal" role="dialog" aria-modal="true" aria-labelledby="adminLoginTitle">
-      <div class="mhead">
-        <div class="admin-login-head">
-          <div class="admin-lock-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div>
-            <h3 id="adminLoginTitle" data-i18n="adminLoginTitle">Đăng nhập Quản trị viên</h3>
-            <p data-i18n="adminLoginSub">Khu vực bảo mật dành riêng cho quản trị viên banve.com</p>
-          </div>
-        </div>
-        <button class="x" id="adminLoginClose" type="button" aria-label="Đóng">✕</button>
-      </div>
-      <div class="mbody">
-        <form class="mform" id="adminLoginForm">
-          <div class="login-alert hidden" id="adminLoginError"></div>
-          <div class="field">
-            <label data-i18n="adminUsername">Tên đăng nhập</label>
-            <input id="adminUsernameInput" type="text" autocomplete="username" placeholder="admin" value="admin" required />
-          </div>
-          <div class="field">
-            <label data-i18n="adminPassword">Mật khẩu</label>
-            <div class="pass-input-wrap">
-              <input id="adminPasswordInput" type="password" autocomplete="current-password" placeholder="••••••••" required />
-              <button type="button" class="btn-toggle-pass" id="btnTogglePass" aria-label="Hiện/ẩn mật khẩu">
-                <svg id="eyeIconOpen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                <svg id="eyeIconClosed" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-              </button>
-            </div>
-          </div>
-          <div class="login-options">
-            <label class="remember-label">
-              <input type="checkbox" id="adminRememberInput" checked />
-              <span data-i18n="adminRemember">Ghi nhớ phiên đăng nhập</span>
-            </label>
-          </div>
-          <button class="btn-primary" type="submit" style="justify-content:center;width:100%;padding:12px;font-size:15px" data-i18n="adminSignIn">
-            Đăng nhập Quản trị
-          </button>
-          <div class="admin-hint-box">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-            <span data-i18n="adminDefaultHint">Tài khoản mặc định: <b>admin</b> / Mật khẩu: <b>banve2026</b></span>
-          </div>
-        </form>
       </div>
     </div>
   </div>

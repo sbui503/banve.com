@@ -192,7 +192,7 @@
       $$("#sortSel option").forEach(function(o){ o.textContent = t(o.getAttribute("data-i18n")); });
       $("#langVi").classList.toggle("on", lang==="vi");
       $("#langEn").classList.toggle("on", lang==="en");
-      fillCitySelects(); renderDeals(); renderDests(); renderHotels(); renderTickets(); renderCaTickets(); renderAdminAll();
+      fillCitySelects(); renderDeals(); renderDests(); renderHotels(); renderTickets(); renderCaTickets();
       if (lastSearch) runSearch(lastSearch.kind, true);
     }
 
@@ -423,6 +423,31 @@
       {code:"BV5N8WK", name:"Phạm Ngọc Linh", product:"", route:"", ticketId:1, qty:2, date:isoDay(new Date(today.getTime()+12*864e5)), total:76, status:"paid"},
       {code:"BV2X6RE", name:"Đỗ Minh Tuấn", product:"", route:"HAN → PQC · VN 1823", date:isoDay(new Date(today.getTime()-3*864e5)), total:127, status:"cancelled"}
     ];
+
+    try {
+      var sRoutes = localStorage.getItem("banve_routes");
+      if (sRoutes) routes = JSON.parse(sRoutes);
+    } catch(e){}
+    try {
+      var sHotels = localStorage.getItem("banve_hotels");
+      if (sHotels) hotels = JSON.parse(sHotels);
+    } catch(e){}
+    try {
+      var sTickets = localStorage.getItem("banve_tickets");
+      if (sTickets) tickets = JSON.parse(sTickets);
+    } catch(e){}
+    try {
+      var sDeals = localStorage.getItem("banve_deals");
+      if (sDeals) deals = JSON.parse(sDeals);
+    } catch(e){}
+    try {
+      var sTrip = localStorage.getItem("banve_trip_affiliate");
+      if (sTrip) tripAffiliate = JSON.parse(sTrip);
+    } catch(e){}
+    try {
+      var sBookings = localStorage.getItem("banve_bookings");
+      if (sBookings) bookings = JSON.parse(sBookings);
+    } catch(e){}
 
     /* ============ Toast ============ */
     var toastTimer = null;
@@ -827,7 +852,7 @@
         var phone = "+1 " + formatUSPhone(rawPhone);
         var code = "BV" + Math.random().toString(36).slice(2,7).toUpperCase();
         bookings.unshift({code:code, name:name, email:email, phone:phone, product:bk.title, route:bk.routeText||"", hotelId:bk.hotelId||0, ticketId:bk.ticketId||0, qty:bk.qty||0, date:bk.date, total:bk.total, status:"paid"});
-        renderAdminAll();
+        try { localStorage.setItem("banve_bookings", JSON.stringify(bookings)); } catch(e){}
 
         // 1. Open Trip.com directly in a new top-level tab (bypasses iframe cookie and captcha loops)
         window.open(bk.tripUrl, "_blank");
@@ -937,293 +962,8 @@
       });
     }
 
-    /* ============ Admin ============ */
-    function statusBadge(st){
-      if (st==="paid") return '<span class="status st-paid">'+esc(t("statusPaid"))+'</span>';
-      if (st==="pending") return '<span class="status st-pend">'+esc(t("statusPending"))+'</span>';
-      return '<span class="status st-cancel">'+esc(t("statusCancelled"))+'</span>';
-    }
-    function bookingProduct(b){
-      if (b.product) return b.product;
-      if (b.route) return t("flightWord") + " " + b.route;
-      if (b.hotelId){ var h = hotels.filter(function(x){return x.id===b.hotelId;})[0]; return t("hotelWord") + " · " + (h?h.name:""); }
-      if (b.ticketId){ var x = tickets.filter(function(y){return y.id===b.ticketId;})[0]; return t("ticketWord") + " · " + (x ? (lang==="vi"?x.nameVi:x.nameEn) : ""); }
-      return "—";
-    }
-    function bookingRow(b, withActions){
-      var act = "";
-      if (withActions){
-        if (b.status==="pending") act = '<button class="mini" data-confirm="'+b.code+'">'+esc(t("confirmB"))+'</button> ';
-        if (b.status!=="cancelled") act += '<button class="mini danger" data-cancel="'+b.code+'">'+esc(t("cancelB"))+'</button>';
-      }
-      return '<tr><td><b>'+b.code+'</b></td><td>'+esc(b.name)+'</td><td>'+esc(bookingProduct(b))+'</td><td>'+fmtDate(b.date)+'</td><td><b>'+fmtMoney(b.total)+'</b></td><td>'+statusBadge(b.status)+'</td>' + (withActions ? '<td style="white-space:nowrap">'+act+'</td>' : '') + '</tr>';
-    }
-    function renderAdminAll(){
-      $("#recentBody").innerHTML = bookings.slice(0,5).map(function(b){ return bookingRow(b,false); }).join("");
-      $("#bookingsBody").innerHTML = bookings.map(function(b){ return bookingRow(b,true); }).join("");
-      var rev = bookings.filter(function(b){return b.status==="paid";}).reduce(function(s,b){return s+b.total;},0);
-      $("#statRevenue").textContent = fmtMoney(rev + 7380);
-      $("#statOrders").textContent = String(bookings.length + 1243);
-      $("#statTickets").textContent = (28640 + bookings.length).toLocaleString("vi-VN");
-      $$("#bookingsBody [data-confirm]").forEach(function(btn){
-        btn.addEventListener("click", function(){
-          var b = bookings.filter(function(x){return x.code===btn.getAttribute("data-confirm");})[0];
-          if (b){ b.status = "paid"; renderAdminAll(); toast(t("toastConfirmed",{code:b.code})); }
-        });
-      });
-      $$("#bookingsBody [data-cancel]").forEach(function(btn){
-        btn.addEventListener("click", function(){
-          var b = bookings.filter(function(x){return x.code===btn.getAttribute("data-cancel");})[0];
-          if (b){ b.status = "cancelled"; renderAdminAll(); toast(t("toastCancelled",{code:b.code})); }
-        });
-      });
-      /* flights */
-      $("#adminFlightsBody").innerHTML = routes.map(function(r, i){
-        var a = airlineOf(r.al);
-        return '<tr><td><b>'+r.from+' → '+r.to+'</b></td><td>'+esc(a.name)+'</td><td>'+r.seats+'</td>' +
-          '<td><input class="price-in" type="number" step="1" min="0" value="'+r.price+'" data-route-price="'+i+'" /></td>' +
-          '<td><span class="status '+(r.on?"st-on":"st-off")+'">'+esc(r.on?t("stOn"):t("stOff"))+'</span></td>' +
-          '<td><button class="mini" data-route-toggle="'+i+'">'+esc(t("toggle"))+'</button></td></tr>';
-      }).join("");
-      $$("[data-route-price]").forEach(function(inp){
-        inp.addEventListener("change", function(){
-          var r = routes[parseInt(inp.getAttribute("data-route-price"),10)];
-          var v = parseInt(inp.value,10); if (!isNaN(v) && v>=0){ r.price = v; renderDests(); toast(t("toastPrice")); }
-        });
-      });
-      $$("[data-route-toggle]").forEach(function(btn){
-        btn.addEventListener("click", function(){
-          var r = routes[parseInt(btn.getAttribute("data-route-toggle"),10)];
-          r.on = !r.on; renderAdminAll(); renderDests(); toast(t("toastToggled"));
-        });
-      });
-      /* hotels */
-      $("#adminHotelsBody").innerHTML = hotels.map(function(h){
-        return '<tr><td><b>'+esc(h.name)+'</b><br /><span style="color:var(--muted)">'+stars(h.stars)+'</span></td><td>'+esc(lang==="vi"?h.cityVi:h.cityEn)+'</td>' +
-          '<td><input class="price-in" type="number" step="1" min="0" value="'+h.price+'" data-hotel-price="'+h.id+'" /></td>' +
-          '<td><span class="status '+(h.on?"st-on":"st-off")+'">'+esc(h.on?t("stOn"):t("stOff"))+'</span></td>' +
-          '<td><button class="mini" data-hotel-toggle="'+h.id+'">'+esc(t("toggle"))+'</button></td></tr>';
-      }).join("");
-      $$("[data-hotel-price]").forEach(function(inp){
-        inp.addEventListener("change", function(){
-          var h = hotels.filter(function(x){return x.id===parseInt(inp.getAttribute("data-hotel-price"),10);})[0];
-          var v = parseInt(inp.value,10); if (h && !isNaN(v) && v>=0){ h.price = v; renderHotels(); if (lastSearch && lastSearch.kind==="hotels") runSearch("hotels", true); toast(t("toastPrice")); }
-        });
-      });
-      $$("[data-hotel-toggle]").forEach(function(btn){
-        btn.addEventListener("click", function(){
-          var h = hotels.filter(function(x){return x.id===parseInt(btn.getAttribute("data-hotel-toggle"),10);})[0];
-          if (h){ h.on = !h.on; renderAdminAll(); renderHotels(); toast(t("toastToggled")); }
-        });
-      });
-      /* tickets */
-      $("#adminTicketsBody").innerHTML = tickets.map(function(x){
-        return '<tr><td><b>'+esc(lang==="vi"?x.nameVi:x.nameEn)+'</b></td><td>'+esc(lang==="vi"?x.cityVi:x.cityEn)+'</td>' +
-          '<td><input class="price-in" type="number" step="1" min="0" value="'+x.price+'" data-ticket-price="'+x.id+'" /></td>' +
-          '<td><span class="status '+(x.on?"st-on":"st-off")+'">'+esc(x.on?t("stOn"):t("stOff"))+'</span></td>' +
-          '<td><button class="mini" data-ticket-toggle="'+x.id+'">'+esc(t("toggle"))+'</button></td></tr>';
-      }).join("");
-      $$("[data-ticket-price]").forEach(function(inp){
-        inp.addEventListener("change", function(){
-          var x = tickets.filter(function(y){return y.id===parseInt(inp.getAttribute("data-ticket-price"),10);})[0];
-          var v = parseInt(inp.value,10); if (x && !isNaN(v) && v>=0){ x.price = v; renderTickets(); renderCaTickets(); if (lastSearch && lastSearch.kind==="tickets") runSearch("tickets", true); toast(t("toastPrice")); }
-        });
-      });
-      $$("[data-ticket-toggle]").forEach(function(btn){
-        btn.addEventListener("click", function(){
-          var x = tickets.filter(function(y){return y.id===parseInt(btn.getAttribute("data-ticket-toggle"),10);})[0];
-          if (x){ x.on = !x.on; renderAdminAll(); renderTickets(); renderCaTickets(); fillCitySelects(); toast(t("toastToggled")); }
-        });
-      });
-      /* deals */
-      $("#adminDealsBody").innerHTML = deals.map(function(d){
-        return '<tr><td><b>'+esc(d.code)+'</b></td><td>'+esc(lang==="vi"?d.vi:d.en)+'</td><td>'+esc(d.exp)+'</td>' +
-          '<td><span class="status '+(d.on?"st-on":"st-off")+'">'+esc(d.on?t("stOn"):t("stOff"))+'</span></td>' +
-          '<td><button class="mini" data-deal-toggle="'+d.id+'">'+esc(t("toggle"))+'</button></td></tr>';
-      }).join("");
-      $$("[data-deal-toggle]").forEach(function(btn){
-        btn.addEventListener("click", function(){
-          var d = deals.filter(function(x){return x.id===parseInt(btn.getAttribute("data-deal-toggle"),10);})[0];
-          if (d){ d.on = !d.on; renderAdminAll(); renderDeals(); toast(t("toastToggled")); }
-        });
-      });
-    }
-    $("#tripForm").addEventListener("submit", function(e){
-      e.preventDefault();
-      tripAffiliate.allianceid = $("#tripAllianceId").value.trim();
-      tripAffiliate.sid = $("#tripSid").value.trim();
-      renderTickets(); renderCaTickets();
-      if (lastSearch && lastSearch.kind==="tickets") runSearch("tickets", true);
-      toast(t("toastTripSaved"));
-    });
-
-    $("#addDealBtn").addEventListener("click", function(){
-      var n = deals.length + 1;
-      deals.push({id:Date.now(), code:"UUDDAI"+n, pct:5, cls:"d"+((n%3)+1), exp:"31/12/2026", on:true,
-        vi:"Giảm 5% cho đơn hàng tiếp theo — áp dụng mọi sản phẩm.", en:"5% off your next order — applies to all products."});
-      renderAdminAll(); renderDeals(); toast(t("toastToggled"));
-    });
-
-    $$("#adminTabs button").forEach(function(btn){
-      btn.addEventListener("click", function(){
-        $$("#adminTabs button").forEach(function(b){ b.classList.remove("on"); });
-        btn.classList.add("on");
-        ["overview","bookings","flights","hotels","tickets","deals","trip"].forEach(function(k){
-          $("#atab-"+k).classList.toggle("hidden", k!==btn.getAttribute("data-atab"));
-        });
-      });
-    });
-    /* ============ Admin Auth & View Controllers ============ */
-    function isAdminLoggedIn(){
-      return sessionStorage.getItem("banve_admin_auth") === "true" || localStorage.getItem("banve_admin_auth") === "true";
-    }
-
-    function showAdminView(){
-      closeAdminLoginModal();
-      $("#customerView").classList.add("hidden");
-      $("#adminView").classList.remove("hidden");
-      window.scrollTo({top:0});
-      renderAdminAll();
-      $("#tripAllianceId").value = tripAffiliate.allianceid;
-      $("#tripSid").value = tripAffiliate.sid;
-      if (window.location.hash !== "#admin"){
-        window.location.hash = "admin";
-      }
-    }
-
-    function showCustomerView(){
-      $("#adminView").classList.add("hidden");
-      $("#customerView").classList.remove("hidden");
-      if (window.location.hash === "#admin"){
-        history.replaceState(null, document.title, window.location.pathname + window.location.search);
-      }
-      window.scrollTo({top:0});
-    }
-
-    function openAdminLoginModal(){
-      var modal = $("#adminLoginModal");
-      if (!modal) return;
-      var err = $("#adminLoginError");
-      if (err) err.classList.add("hidden");
-      var passIn = $("#adminPasswordInput");
-      if (passIn) passIn.value = "";
-      modal.classList.remove("hidden");
-      setTimeout(function(){
-        if (passIn) passIn.focus();
-      }, 100);
-    }
-
-    function closeAdminLoginModal(){
-      var modal = $("#adminLoginModal");
-      if (modal) modal.classList.add("hidden");
-    }
-
-    $("#openAdmin").addEventListener("click", function(){
-      if (isAdminLoggedIn()){
-        showAdminView();
-      } else {
-        openAdminLoginModal();
-      }
-    });
-
-    var adminLoginClose = $("#adminLoginClose");
-    if (adminLoginClose) adminLoginClose.addEventListener("click", closeAdminLoginModal);
-    var adminLoginModal = $("#adminLoginModal");
-    if (adminLoginModal){
-      adminLoginModal.addEventListener("click", function(e){
-        if (e.target === this) closeAdminLoginModal();
-      });
-    }
-
-    $("#backToSite").addEventListener("click", function(){
-      showCustomerView();
-    });
-
-    var logoutBtn = $("#adminLogout");
-    if (logoutBtn){
-      logoutBtn.addEventListener("click", function(){
-        sessionStorage.removeItem("banve_admin_auth");
-        localStorage.removeItem("banve_admin_auth");
-        toast(t("toastAdminLogout"));
-        showCustomerView();
-      });
-    }
-
-    var adminForm = $("#adminLoginForm");
-    if (adminForm){
-      adminForm.addEventListener("submit", function(e){
-        e.preventDefault();
-        var u = ($("#adminUsernameInput").value || "").trim().toLowerCase();
-        var p = ($("#adminPasswordInput").value || "").trim();
-        var savedPwd = localStorage.getItem("banve_admin_pwd") || "banve2026";
-        var remember = $("#adminRememberInput") && $("#adminRememberInput").checked;
-
-        var validUser = (u === "admin" || u === "owner" || u === "banve");
-        var validPass = (p === savedPwd || p === "banve2026" || p === "admin" || p === "admin123");
-
-        if (validUser && validPass){
-          if (remember){
-            localStorage.setItem("banve_admin_auth", "true");
-          } else {
-            sessionStorage.setItem("banve_admin_auth", "true");
-          }
-          closeAdminLoginModal();
-          toast(t("adminLoginSuccess"));
-          showAdminView();
-        } else {
-          var err = $("#adminLoginError");
-          if (err){
-            err.textContent = t("adminInvalidAuth");
-            err.classList.remove("hidden");
-          }
-          var passInput = $("#adminPasswordInput");
-          if (passInput){
-            passInput.value = "";
-            passInput.focus();
-          }
-        }
-      });
-    }
-
-    var btnTogglePass = $("#btnTogglePass");
-    if (btnTogglePass){
-      btnTogglePass.addEventListener("click", function(){
-        var passIn = $("#adminPasswordInput");
-        var eyeOpen = $("#eyeIconOpen");
-        var eyeClosed = $("#eyeIconClosed");
-        if (passIn.type === "password"){
-          passIn.type = "text";
-          if (eyeOpen) eyeOpen.classList.add("hidden");
-          if (eyeClosed) eyeClosed.classList.remove("hidden");
-        } else {
-          passIn.type = "password";
-          if (eyeOpen) eyeOpen.classList.remove("hidden");
-          if (eyeClosed) eyeClosed.classList.add("hidden");
-        }
-      });
-    }
-
-    var adminPwdForm = $("#adminPwdForm");
-    if (adminPwdForm){
-      adminPwdForm.addEventListener("submit", function(e){
-        e.preventDefault();
-        var newPwd = ($("#newAdminPwdInput").value || "").trim();
-        if (!newPwd || newPwd.length < 4){
-          toast(lang === "vi" ? "Mật khẩu phải có ít nhất 4 ký tự." : "Password must be at least 4 characters.");
-          return;
-        }
-        localStorage.setItem("banve_admin_pwd", newPwd);
-        toast(t("toastPwdSaved"));
-        $("#newAdminPwdInput").value = "";
-      });
-    }
-
     if (window.location.hash === "#admin"){
-      if (isAdminLoggedIn()){
-        showAdminView();
-      } else {
-        openAdminLoginModal();
-      }
+      window.location.href = "admin.html";
     }
 
     /* ============ Language ============ */
@@ -1235,7 +975,7 @@
       if (!FX[c]) return;
       currency = c;
       $$(".cur-sel").forEach(function(s){ s.value = c; });
-      renderDeals(); renderDests(); renderHotels(); renderTickets(); renderCaTickets(); renderAdminAll();
+      renderDeals(); renderDests(); renderHotels(); renderTickets(); renderCaTickets();
       if (lastSearch) runSearch(lastSearch.kind, true);
     }
     $$(".cur-sel").forEach(function(s){
@@ -1285,24 +1025,6 @@
         if (e.target === this) closeTripFlightsModal();
       });
     }
-    var adminPrevFlight = $("#adminPreviewTripFlightBtn");
-    if (adminPrevFlight){
-      adminPrevFlight.addEventListener("click", function(){
-        openTripPortal("flights");
-      });
-    }
-    var adminPrevHotel = $("#adminPreviewTripHotelBtn");
-    if (adminPrevHotel){
-      adminPrevHotel.addEventListener("click", function(){
-        openTripPortal("hotels");
-      });
-    }
-    var adminPrevTicket = $("#adminPreviewTripTicketBtn");
-    if (adminPrevTicket){
-      adminPrevTicket.addEventListener("click", function(){
-        openTripPortal("tickets");
-      });
-    }
     document.addEventListener("keydown", function(e){
       if (e.key === "Escape"){
         closeTripFlightsModal();
@@ -1311,6 +1033,6 @@
     });
 
     /* ============ Init ============ */
-    setDates(); fillCitySelects(); renderDeals(); renderDests(); renderHotels(); renderTickets(); renderCaTickets(); renderAdminAll();
+    setDates(); fillCitySelects(); renderDeals(); renderDests(); renderHotels(); renderTickets(); renderCaTickets();
   })();
   
