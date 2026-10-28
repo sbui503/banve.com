@@ -362,7 +362,7 @@
       return url + (url.indexOf("?") < 0 ? "?" : "&") + p.join("&");
     }
 
-    function openTripPortal(type, customUrl){
+    function openTripPortal(type, customUrl, title, orderCode){
       var baseUrls = {
         flights: "https://vn.trip.com/flights/",
         hotels: "https://vn.trip.com/hotels/",
@@ -372,17 +372,56 @@
         locale: lang === "vi" ? "vi-VN" : "en-US",
         curr: currency
       });
-      window.open(targetUrl, "_blank");
-      toast(lang === "vi" ? "Đang mở Trip.com trong tab mới..." : "Opening Trip.com in a new tab...");
+
+      var modal = $("#tripModal");
+      var iframe = $("#tripFlightIframe");
+      var loader = $("#tripIframeLoading");
+      var directLink = $("#tripDirectLink");
+      var cookieBtn = $("#tripCookieDirectBtn");
+      var fallbackLink = $("#tripFallbackLink");
+      var titleEl = $("#tripModalTitle");
+      var pnrBadge = $("#tripModalPnr");
+
+      if (titleEl){
+        titleEl.textContent = title || (lang === "vi" ? "Cổng thanh toán & hoàn tất đặt vé — Trip.com" : "Trip.com Booking Portal");
+      }
+      if (pnrBadge){
+        if (orderCode){
+          pnrBadge.textContent = (lang === "vi" ? "Mã đơn: " : "Order: ") + orderCode;
+          pnrBadge.classList.remove("hidden");
+        } else {
+          pnrBadge.classList.add("hidden");
+        }
+      }
+      if (directLink) directLink.href = targetUrl;
+      if (cookieBtn) cookieBtn.href = targetUrl;
+      if (fallbackLink) fallbackLink.href = targetUrl;
+
+      if (loader){
+        loader.classList.remove("hidden");
+        setTimeout(function(){
+          loader.classList.add("hidden");
+        }, 3200);
+      }
+      if (iframe){
+        iframe.onload = function(){
+          if (loader) loader.classList.add("hidden");
+        };
+        iframe.src = targetUrl;
+      }
+      if (modal) modal.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
     }
-    function openTripFlightsModal(customUrl){ openTripPortal("flights", customUrl); }
-    function openTripHotelsModal(customUrl){ openTripPortal("hotels", customUrl); }
-    function openTripTicketsModal(customUrl){ openTripPortal("tickets", customUrl); }
+    function openTripFlightsModal(customUrl, title){ openTripPortal("flights", customUrl, title); }
+    function openTripHotelsModal(customUrl, title){ openTripPortal("hotels", customUrl, title); }
+    function openTripTicketsModal(customUrl, title){ openTripPortal("tickets", customUrl, title); }
     function closeTripFlightsModal(){
       var modal = $("#tripModal");
       if (modal) modal.classList.add("hidden");
       var iframe = $("#tripFlightIframe");
       if (iframe) iframe.src = "about:blank";
+      var pnrBadge = $("#tripModalPnr");
+      if (pnrBadge) pnrBadge.classList.add("hidden");
       document.body.style.overflow = "";
     }
 
@@ -854,21 +893,12 @@
         bookings.unshift({code:code, name:name, email:email, phone:phone, product:bk.title, route:bk.routeText||"", hotelId:bk.hotelId||0, ticketId:bk.ticketId||0, qty:bk.qty||0, date:bk.date, total:bk.total, status:"paid"});
         try { localStorage.setItem("banve_bookings", JSON.stringify(bookings)); } catch(e){}
 
-        // 1. Open Trip.com directly in a new top-level tab (bypasses iframe cookie and captcha loops)
-        window.open(bk.tripUrl, "_blank");
+        // Close customer info modal
+        closeBooking();
 
-        // 2. Display the clear booking confirmation in the modal with PNR and a direct link to re-open if needed
-        $("#bkTitle").textContent = t("bkSuccess");
-        $("#bkSub").textContent = bk.title;
-        $("#bkBody").innerHTML =
-          '<div class="success"><div class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg></div>' +
-          '<div class="pnr">'+code+'</div>' +
-          '<p><b>'+esc(t("bkPnrLabel"))+'</b></p>' +
-          '<p style="margin:10px 0 16px;line-height:1.5">'+esc(t("bkSuccessDirectNote"))+'</p>' +
-          '<a class="btn-primary" href="'+esc(bk.tripUrl)+'" target="_blank" rel="noopener sponsored" style="justify-content:center;width:100%;text-decoration:none;margin-bottom:10px">'+esc(t("continueToTrip"))+' ↗</a>' +
-          '<button class="btn-ghost-sm" id="bkDone" type="button" style="justify-content:center;width:100%">'+esc(t("bkDone"))+'</button>' +
-          '</div>';
-        $("#bkDone").addEventListener("click", closeBooking);
+        // Open up iframe to trip directly without redirecting!
+        openTripPortal(bk.kind || "flights", bk.tripUrl, bk.title, code);
+        toast(lang === "vi" ? "Đã lưu thông tin! Đang tải cổng đặt vé Trip.com..." : "Information saved! Loading Trip.com checkout...");
       });
     }
     function closeBooking(){ $("#bookingOverlay").classList.add("hidden"); }
