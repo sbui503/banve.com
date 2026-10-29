@@ -20,7 +20,7 @@
         destTitle:"Điểm đến được yêu thích", destSub:"Giá vé một chiều từ TP. Hồ Chí Minh",
         hotelsTitle:"Khách sạn nổi bật", hotelsSub:"Được khách đặt lại nhiều nhất tháng này",
         ticketsTitle:"Vé tham quan bán chạy", ticketsSub:"Vé điện tử — vào cổng bằng mã QR",
-        navCa:"California", caTitle:"Điểm tham quan California", caSub:"Đặt vé qua Trip.com — đối tác của banve.com", bookTrip:"Đặt trên Trip.com",
+        navCa:"California", caTitle:"Điểm tham quan California", caSub:"Vé công viên giải trí, phim trường & tour tham quan nổi tiếng nhất tại California", bookTrip:"Chọn",
         atTrip:"Trip.com", tripTitle:"Đối tác Trip.com",
         tripNote:"Nhập Alliance ID và SID từ tài khoản đối tác Trip.com (connect.trip.com). Có thể để trống và điền sau — khi chưa lưu SID, các nút đặt vé California sẽ mở trang Trip.com mà không kèm thông số theo dõi.",
         tripAlliance:"Alliance ID", tripSave:"Lưu cài đặt", toastTripSaved:"Đã lưu cài đặt Trip.com — link đặt vé đã được cập nhật",
@@ -106,7 +106,7 @@
         destTitle:"Loved destinations", destSub:"One-way fares from Ho Chi Minh City",
         hotelsTitle:"Featured hotels", hotelsSub:"Most re-booked this month",
         ticketsTitle:"Best-selling attraction tickets", ticketsSub:"E-tickets — enter with a QR code",
-        navCa:"California", caTitle:"California attractions", caSub:"Booked via Trip.com — a banve.com partner", bookTrip:"Book on Trip.com",
+        navCa:"California", caTitle:"California attractions", caSub:"Top theme parks, studio tours & iconic attractions across California", bookTrip:"Select",
         atTrip:"Trip.com", tripTitle:"Trip.com Affiliate",
         tripNote:"Enter the Alliance ID and SID from your Trip.com affiliate account (connect.trip.com). You can leave these blank and fill them in later — until a SID is saved, the California booking buttons open Trip.com without tracking parameters.",
         tripAlliance:"Alliance ID", tripSave:"Save settings", toastTripSaved:"Trip.com settings saved — booking links updated",
@@ -750,9 +750,7 @@
 
     function ticketCard(x){
       var name = lang==="vi" ? x.nameVi : x.nameEn;
-      var action = x.tripUrl
-        ? '<a class="book-trip" href="'+esc(tripLink(x.tripUrl))+'" target="_blank" rel="noopener sponsored" data-trip-ticket-url="'+esc(tripLink(x.tripUrl))+'">'+esc(t("bookTrip"))+'</a>'
-        : '<button type="button" data-book-ticket="'+x.id+'">'+esc(t("bookNow"))+'</button>';
+      var action = '<button type="button" data-book-ticket="'+x.id+'">'+esc(t("bookNow"))+'</button>';
       return '<article class="prod"><div class="ph"><img src="'+x.img+'" alt="'+esc(name)+'" /><span class="badge">-'+discountPct(x.old,x.price)+'%</span></div>' +
         '<div class="body"><div class="meta"><span>'+esc(lang==="vi"?x.cityVi:x.cityEn)+'</span></div><h3>'+esc(name)+'</h3>' +
         '<div class="meta"><span class="rate">'+x.rating+'</span><span>'+x.reviews.toLocaleString("vi-VN")+' '+esc(t("reviews"))+'</span></div>' +
